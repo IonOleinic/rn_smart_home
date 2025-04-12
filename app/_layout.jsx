@@ -9,6 +9,11 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
           <Stack.Screen name='device/[id]' options={{ headerShown: false }} />
+          <Stack.Screen name='device/add' options={{ headerShown: false }} />
+          <Stack.Screen name='scene/[id]' options={{ headerShown: false }} />
+          <Stack.Screen name='scene/add' options={{ headerShown: false }} />
+          <Stack.Screen name='group/[id]' options={{ headerShown: false }} />
+          <Stack.Screen name='group/add' options={{ headerShown: false }} />
         </Stack>
       </SafeAreaProvider>
     </ThemeProvider>

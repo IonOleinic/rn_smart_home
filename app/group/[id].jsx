@@ -5,7 +5,7 @@ import { useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 
-const DeviceDetails = () => {
+const GroupDetails = () => {
   const { id } = useLocalSearchParams()
   const { colorScheme, setColorScheme, theme } = useContext(ThemeContext)
   const styles = createStyleSheet(theme, colorScheme)
@@ -20,7 +20,7 @@ const DeviceDetails = () => {
     >
       <View>
         <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
-          Device Details {id}
+          Group Details {id}
         </Text>
       </View>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
@@ -28,7 +28,7 @@ const DeviceDetails = () => {
   )
 }
 
-export default DeviceDetails
+export default GroupDetails
 
 const createStyleSheet = (theme, colorScheme) => {
   return StyleSheet.create({})

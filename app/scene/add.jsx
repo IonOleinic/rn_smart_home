@@ -1,12 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { useLocalSearchParams } from 'expo-router'
 import { ThemeContext } from '@/context/ThemeContext'
 import { useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 
-const DeviceDetails = () => {
-  const { id } = useLocalSearchParams()
+const AddScene = () => {
   const { colorScheme, setColorScheme, theme } = useContext(ThemeContext)
   const styles = createStyleSheet(theme, colorScheme)
   return (
@@ -20,7 +18,7 @@ const DeviceDetails = () => {
     >
       <View>
         <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
-          Device Details {id}
+          Add New Scene
         </Text>
       </View>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
@@ -28,7 +26,7 @@ const DeviceDetails = () => {
   )
 }
 
-export default DeviceDetails
+export default AddScene
 
 const createStyleSheet = (theme, colorScheme) => {
   return StyleSheet.create({})

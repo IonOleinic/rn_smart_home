@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar'
 
 const Profile = () => {
   const { colorScheme, setColorScheme, theme } = useContext(ThemeContext)
+  const styles = createStyleSheet(theme, colorScheme)
   return (
     <SafeAreaView
       style={{
@@ -27,4 +28,6 @@ const Profile = () => {
 
 export default Profile
 
-const styles = StyleSheet.create({})
+const createStyleSheet = (theme, colorScheme) => {
+  return StyleSheet.create({})
+}

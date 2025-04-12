@@ -1,11 +1,12 @@
-import { Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { ThemeContext } from '@/context/ThemeContext'
 import { useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 
-export default function Index() {
+const Dashboard = () => {
   const { colorScheme, setColorScheme, theme } = useContext(ThemeContext)
+  const styles = createStyleSheet(theme, colorScheme)
   return (
     <SafeAreaView
       style={{
@@ -23,4 +24,10 @@ export default function Index() {
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
     </SafeAreaView>
   )
+}
+
+export default Dashboard
+
+const createStyleSheet = (theme, colorScheme) => {
+  return StyleSheet.create({})
 }
