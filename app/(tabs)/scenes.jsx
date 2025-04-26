@@ -1,11 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { ThemeContext } from '@/context/ThemeContext'
-import { useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
+import useTheme from '@/hooks/useTheme'
 
 const Scenes = () => {
-  const { colorScheme, setColorScheme, theme } = useContext(ThemeContext)
+  const { colorScheme, setColorScheme, theme } = useTheme()
   const styles = createStyleSheet(theme, colorScheme)
   return (
     <SafeAreaView

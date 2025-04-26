@@ -1,25 +1,29 @@
-import { StyleSheet, Text, View } from 'react-native'
-import { ThemeContext } from '@/context/ThemeContext'
-import { useContext } from 'react'
+import { StyleSheet, Text, View, Pressable } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
+import useTheme from '@/hooks/useTheme'
+import useLogout from '@/hooks/useLogout'
 
 const Profile = () => {
-  const { colorScheme, setColorScheme, theme } = useContext(ThemeContext)
+  const { colorScheme, setColorScheme, theme } = useTheme()
+  const logout = useLogout()
   const styles = createStyleSheet(theme, colorScheme)
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: theme.background,
-      }}
-    >
+    <SafeAreaView style={styles.container}>
       <View>
-        <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
-          Profile
-        </Text>
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            {
+              backgroundColor: pressed
+                ? theme.buttonPressedBackground
+                : theme.buttonBackground,
+            },
+          ]}
+          onPress={logout}
+        >
+          <Text style={styles.buttonText}>Sign Out</Text>
+        </Pressable>
       </View>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
     </SafeAreaView>
@@ -29,5 +33,22 @@ const Profile = () => {
 export default Profile
 
 const createStyleSheet = (theme, colorScheme) => {
-  return StyleSheet.create({})
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.background,
+    },
+    button: {
+      padding: 10,
+      borderRadius: 5,
+      width: 100,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    buttonText: {
+      color: theme.buttonText,
+    },
+  })
 }

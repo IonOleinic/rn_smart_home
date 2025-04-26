@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { ThemeContext } from '@/context/ThemeContext'
-import { useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
@@ -9,12 +8,13 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import Animated, { FadeInUp } from 'react-native-reanimated'
 import { useFocusEffect } from 'expo-router'
 import AddNewItem from '@/components/AddNewItem/AddNewItem'
+import useTheme from '@/hooks/useTheme'
 
 const addNewItemIconSize = 45
 
 const Add = () => {
   const [refreshKey, setRefreshKey] = useState(0)
-  const { colorScheme, setColorScheme, theme } = useContext(ThemeContext)
+  const { colorScheme, setColorScheme, theme } = useTheme()
   const styles = useMemo(
     () => createStyleSheet(theme, colorScheme),
     [theme, colorScheme]

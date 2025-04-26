@@ -1,21 +1,31 @@
 import { Stack } from 'expo-router'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { ThemeProvider } from '@/context/ThemeContext'
+import { ThemeProvider } from '@/context/ThemeProvider'
+import { AuthProvider } from '@/context/AuthProvider'
 
 export default function RootLayout() {
   return (
-    <ThemeProvider>
-      <SafeAreaProvider>
-        <Stack>
-          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-          <Stack.Screen name='device/[id]' options={{ headerShown: false }} />
-          <Stack.Screen name='device/add' options={{ headerShown: false }} />
-          <Stack.Screen name='scene/[id]' options={{ headerShown: false }} />
-          <Stack.Screen name='scene/add' options={{ headerShown: false }} />
-          <Stack.Screen name='group/[id]' options={{ headerShown: false }} />
-          <Stack.Screen name='group/add' options={{ headerShown: false }} />
-        </Stack>
-      </SafeAreaProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <SafeAreaProvider>
+          <StackScreens />
+        </SafeAreaProvider>
+      </ThemeProvider>
+    </AuthProvider>
+  )
+}
+
+function StackScreens() {
+  return (
+    <Stack>
+      <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+      <Stack.Screen name='device/[id]' options={{ headerShown: false }} />
+      <Stack.Screen name='device/add' options={{ headerShown: false }} />
+      <Stack.Screen name='scene/[id]' options={{ headerShown: false }} />
+      <Stack.Screen name='scene/add' options={{ headerShown: false }} />
+      <Stack.Screen name='group/[id]' options={{ headerShown: false }} />
+      <Stack.Screen name='group/add' options={{ headerShown: false }} />
+      <Stack.Screen name='auth/signin' options={{ headerShown: false }} />
+    </Stack>
   )
 }

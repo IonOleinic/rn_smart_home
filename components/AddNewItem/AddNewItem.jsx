@@ -1,17 +1,17 @@
 import { Pressable, StyleSheet, Text } from 'react-native'
-import { ThemeContext } from '@/context/ThemeContext'
-import { useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useFocusEffect, useRouter } from 'expo-router'
 import Animated, {
   FadeInLeft,
   FadeInRight,
   FadeInDown,
 } from 'react-native-reanimated'
+import useTheme from '@/hooks/useTheme'
 
 const AddNewItem = ({ title, icon }) => {
   const [refreshKey, setRefreshKey] = useState(0)
   const router = useRouter()
-  const { colorScheme, setColorScheme, theme } = useContext(ThemeContext)
+  const { colorScheme, setColorScheme, theme } = useTheme()
   const styles = useMemo(
     () => createStyleSheet(theme, colorScheme),
     [theme, colorScheme]
@@ -39,7 +39,7 @@ const AddNewItem = ({ title, icon }) => {
           {
             borderColor: pressed ? theme.active : theme.text,
             backgroundColor: pressed
-              ? theme.activePressedBackground
+              ? theme.buttonPressedBackgroundTran
               : 'transparent',
           },
         ]}
