@@ -4,21 +4,24 @@ import { StatusBar } from 'expo-status-bar'
 import useTheme from '@/hooks/useTheme'
 
 const Dashboard = () => {
-  const { colorScheme, setColorScheme, theme } = useTheme()
-  const styles = createStyleSheet(theme, colorScheme)
+  const { colorScheme, theme } = useTheme()
+  const styles = createStyleSheet(theme)
   return (
     <SafeAreaView
       style={{
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: theme.background,
+        backgroundColor: theme.pageBck,
+        paddingBottom: 64,
       }}
     >
-      <View>
-        <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
-          Dashboard
-        </Text>
+      <View style={styles.pageContainer}>
+        <View>
+          <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
+            Dashboard
+          </Text>
+        </View>
       </View>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
     </SafeAreaView>
@@ -27,6 +30,16 @@ const Dashboard = () => {
 
 export default Dashboard
 
-const createStyleSheet = (theme, colorScheme) => {
-  return StyleSheet.create({})
+const createStyleSheet = (theme) => {
+  return StyleSheet.create({
+    pageContainer: {
+      width: '100%',
+      position: 'relative',
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.pageBck,
+      gap: 15,
+    },
+  })
 }

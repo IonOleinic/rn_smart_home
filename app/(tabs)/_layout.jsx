@@ -11,7 +11,7 @@ import PersistLogin from '@/components/Auth/PersistLogin'
 const tabBarIconSize = 25
 
 const TabsLayout = () => {
-  const { colorScheme, setColorScheme, theme } = useTheme()
+  const { colorScheme, theme } = useTheme()
   return (
     <PersistLogin>
       <Tabs
@@ -23,9 +23,10 @@ const TabsLayout = () => {
           tabBarStyle: {
             elevation: 0,
             position: 'absolute',
-            bottom: 5,
-            height: 54,
-            marginHorizontal: 8,
+            bottom: 0,
+            height: 64,
+            paddingHorizontal: 10,
+            paddingVertical: 10,
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: theme.background,

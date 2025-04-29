@@ -10,29 +10,38 @@ import Device from '@/components/DeviceComponents/Device'
 
 const Devices = () => {
   const { colorScheme, theme } = useTheme()
-  const styles = createStyleSheet(theme, colorScheme)
+  const styles = createStyleSheet(theme)
   const [devices, setDevices] = useState([])
-  const axiosPrivate = useAxiosPrivate()
+  const axios = useAxiosPrivate()
   const [loading, setLoading] = useState(true)
   const [toolbarExpanded, setToolbarExpanded] = useState(false)
+  const [filter, setFilter] = useState({
+    name: '',
+    favorite: undefined,
+    groups: [],
+  })
+  const [selectedOrder, setSelectedOrder] = useState({ name: 'Date' })
 
-  const getDevices = async () => {
-    setLoading(true)
+  const getDevices = async (usedFilter = filter, usedOrder = selectedOrder) => {
     try {
-      const response = await axiosPrivate.get('/devices')
+      const response = await axios.get(
+        `/devices?filter=${JSON.stringify(usedFilter)}&order=${usedOrder?.name}`
+      )
       setDevices(response.data)
       console.log('getDevices success')
     } catch (error) {
       console.log(error)
-    } finally {
-      setLoading(false)
     }
   }
-  useFocusEffect(
-    useCallback(() => {
-      getDevices()
-    }, [])
-  )
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     getDevices()
+  //   }, [])
+  // )
+  useEffect(() => {
+    getDevices()
+  }, [])
+
   return (
     <SafeAreaView
       style={{
@@ -40,7 +49,7 @@ const Devices = () => {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: theme.background,
-        paddingBottom: 68,
+        paddingBottom: 64,
       }}
     >
       <View
@@ -76,13 +85,13 @@ const Devices = () => {
 
 export default Devices
 
-const createStyleSheet = (theme, colorScheme) => {
+const createStyleSheet = (theme) => {
   return StyleSheet.create({
     pageContainer: {
       width: '100%',
       position: 'relative',
       flex: 1,
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
       alignItems: 'center',
       backgroundColor: theme.pageBck,
       gap: 15,

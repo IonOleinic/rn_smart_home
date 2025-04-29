@@ -22,23 +22,23 @@ const Message = ({ severity, text }) => {
     switch (severity) {
       case 'error':
         setSeverityIcon(errorIcon)
-        setSeverityBckColor(theme.errorBackground)
+        setSeverityBckColor(theme.errorBck)
         setSeverityColor(theme.error)
         break
       case 'info':
         setSeverityIcon(infoIcon)
-        setSeverityBckColor(theme.infoBackground)
+        setSeverityBckColor(theme.infoBck)
         setSeverityColor(theme.info)
         break
       case 'success':
         setSeverityIcon(successIcon)
-        setSeverityBckColor(theme.successBackground)
+        setSeverityBckColor(theme.successBck)
         setSeverityColor(theme.success)
         break
       case 'warn':
       case 'warning':
         setSeverityIcon(warningIcon)
-        setSeverityBckColor(theme.warningBackground)
+        setSeverityBckColor(theme.warningBck)
         setSeverityColor(theme.warning)
         break
       default:

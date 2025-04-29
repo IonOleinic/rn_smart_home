@@ -4,14 +4,55 @@ import useTheme from '@/hooks/useTheme'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import useDeviceIcon from '@/hooks/useDeviceIcon'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { socket } from '@/api/io'
+import useAxiosPrivate from '@/hooks/useAxiosPrivate'
+import useFinalDevice from '@/hooks/useFinalDevice'
+import InactiveLayer from '../Layers/InactiveLayer'
 
 const Device = ({ initDevice }) => {
+  const axios = useAxiosPrivate()
   const { theme } = useTheme()
   const [visibility, setVisibility] = useState(false)
   const [device, setDevice] = useState(initDevice)
   const styles = createStyleSheet(theme)
   const { deviceIcon, batteryIcon, availableIcon, favBool, favIcon } =
     useDeviceIcon(device)
+  const finalDevice = useFinalDevice(device)
+
+  const updateDevice = async () => {
+    try {
+      const response = await axios.put(`/device/${device.id}`, device)
+      setDevice(response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if (socket) {
+      const updateDeviceHandler = (data) => {
+        if (data.device.mqtt_name === device.mqtt_name) {
+          //there are an isssue that multiple devices of type smartIR are updating(they have same mqtt_name)
+          if (data.device.device_type === 'smartIR') {
+            setDevice((prev) => {
+              return {
+                ...prev,
+                available: data.device.available,
+              }
+            })
+          } else {
+            setDevice(data.device)
+          }
+        }
+      }
+      socket.on('update_device', updateDeviceHandler)
+      // Cleanup function to remove the listener when the component unmounts
+      return () => {
+        socket.off('update_device', updateDeviceHandler)
+      }
+    }
+  }, [])
+
   return (
     <View style={styles.device}>
       <View style={styles.deviceTop}>
@@ -58,7 +99,18 @@ const Device = ({ initDevice }) => {
             </Text>
           </View>
         </Pressable>
-        <Pressable style={styles.favIcon}>{favIcon}</Pressable>
+        <Pressable
+          style={({ pressed }) => [
+            styles.favIcon,
+            { backgroundColor: pressed ? theme.iconPressedBck : 'transparent' },
+          ]}
+          onPress={() => {
+            device.favorite = !favBool
+            updateDevice()
+          }}
+        >
+          {favIcon}
+        </Pressable>
         <Pressable onPress={() => {}} style={styles.varticalMenu}>
           <MaterialIcons name='more-vert' size={28} color={theme.text} />
         </Pressable>
@@ -83,7 +135,6 @@ const Device = ({ initDevice }) => {
           </View>
         </View>
       </View>
-
       <View
         style={
           visibility
@@ -91,7 +142,8 @@ const Device = ({ initDevice }) => {
             : [styles.finalDevice, styles.finalDeviceHidden]
         }
       >
-        <Text style={{ color: theme.text }}>Final Device </Text>
+        {finalDevice}
+        <InactiveLayer visibility={!device.available} />
       </View>
     </View>
   )
@@ -102,7 +154,6 @@ export default Device
 const createStyleSheet = (theme) => {
   return StyleSheet.create({
     device: {
-      position: 'relative',
       width: 340,
       minHeight: 120,
       backgroundColor: theme.background,
@@ -127,7 +178,7 @@ const createStyleSheet = (theme) => {
     },
     deviceName: {
       color: theme.text,
-      fontSize: 21,
+      fontSize: 20,
       textAlign: 'center',
       width: '100%',
       height: 80,
@@ -145,6 +196,7 @@ const createStyleSheet = (theme) => {
       height: 36,
       alignItems: 'center',
       justifyContent: 'center',
+      borderRadius: '50%',
     },
     varticalMenu: {
       width: 36,

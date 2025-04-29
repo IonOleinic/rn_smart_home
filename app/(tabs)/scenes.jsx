@@ -1,11 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Pressable } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import useTheme from '@/hooks/useTheme'
+import { useState } from 'react'
 
 const Scenes = () => {
-  const { colorScheme, setColorScheme, theme } = useTheme()
-  const styles = createStyleSheet(theme, colorScheme)
+  const { colorScheme, theme } = useTheme()
+  const [loading, setLoading] = useState(true)
+  const [toolbarExpanded, setToolbarExpanded] = useState(false)
+  const styles = createStyleSheet(theme)
   return (
     <SafeAreaView
       style={{
@@ -13,12 +16,31 @@ const Scenes = () => {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: theme.background,
+        paddingBottom: 64,
       }}
     >
-      <View>
-        <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
-          Scenes
-        </Text>
+      <View
+        style={[
+          styles.pageContainer,
+          { paddingBottom: toolbarExpanded ? 0 : 15 },
+        ]}
+      >
+        <View
+          style={
+            toolbarExpanded
+              ? [styles.toolbar, styles.toolbarExpanded]
+              : styles.toolbar
+          }
+        >
+          <Pressable onPress={() => setToolbarExpanded((prev) => !prev)}>
+            <Text style={{ color: theme.text }}>Toolbar</Text>
+          </Pressable>
+        </View>
+        <View style={styles.scenes}>
+          <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
+            Scenes
+          </Text>
+        </View>
       </View>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
     </SafeAreaView>
@@ -27,6 +49,42 @@ const Scenes = () => {
 
 export default Scenes
 
-const createStyleSheet = (theme, colorScheme) => {
-  return StyleSheet.create({})
+const createStyleSheet = (theme) => {
+  return StyleSheet.create({
+    pageContainer: {
+      width: '100%',
+      position: 'relative',
+      flex: 1,
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      backgroundColor: theme.pageBck,
+      gap: 15,
+    },
+    toolbar: {
+      position: 'sticky',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: 68,
+      overflow: 'hidden',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 9,
+      backgroundColor: theme.background,
+    },
+    toolbarExpanded: {
+      position: 'absolute',
+      height: '100%',
+      top: 0,
+    },
+    scenes: {
+      flex: 1,
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: theme.pageBck,
+      gap: 15,
+      paddingHorizontal: 10,
+    },
+  })
 }

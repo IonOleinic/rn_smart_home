@@ -45,8 +45,10 @@ const indigoTranDark = 'rgba(99, 102, 241, 0.25)'
 
 /* grey colors */
 const lightGrey = 'rgb(220, 220, 220)'
-const mediumGrey = '#ccc'
+const mediumGrey = 'rgb(204, 204, 204)' // #ccc
+const mediumGreyTran = 'rgba(204, 204, 204, 0.6)'
 const darkGrey = 'rgb(125, 125, 125)'
+const darkGreyTran = 'rgba(125, 125, 125,0.6)'
 const veryDarkGrey = 'rgb(55, 55, 55)'
 
 /*========== default colors ============*/
@@ -56,6 +58,8 @@ const inactiveDark = darkGrey
 const pressed = pressedIndigo
 const pressedTranLight = indigoTranLight
 const pressedTranDark = indigoTranDark
+const iconPressedBckLight = mediumGreyTran
+const iconPressedBckDark = darkGreyTran
 const boxShadowActiveLight = indigoShadowLight
 const boxShadowActiveDark = indigoShadowDark
 const boxShadowErrorLight = redShadowLight
@@ -82,24 +86,25 @@ export const Colors = {
     text: 'black',
     background: 'white',
     icon: 'black',
+    iconPressedBck: iconPressedBckLight,
     active: active,
     inactive: inactiveLight,
     link: link,
     linkPressed: linkPressed,
     error: error,
-    errorBackground: errorBckLight,
+    errorBck: errorBckLight,
     info: info,
-    infoBackground: infoBckLight,
+    infoBck: infoBckLight,
     success: success,
-    successBackground: successBckLight,
+    successBck: successBckLight,
     warning: warning,
-    warningBackground: warningBckLight,
+    warningBck: warningBckLight,
     buttonText: 'white',
-    buttonBackground: active,
-    buttonPressedBackground: pressed,
-    buttonPressedBackgroundTran: pressedTranLight,
-    tabBarBackground: lightGrey,
-    placeHolderText: darkGrey,
+    buttonBck: active,
+    buttonPressedBck: pressed,
+    buttonPressedBckTran: pressedTranLight,
+    tabBarBck: lightGrey,
+    placeholderText: darkGrey,
     boxShadowActive: boxShadowActiveLight,
     boxShadowError: boxShadowErrorLight,
     pageBck: pageBckLight,
@@ -108,23 +113,24 @@ export const Colors = {
     text: 'white',
     background: 'black',
     icon: 'red',
+    iconPressedBck: iconPressedBckDark,
     active: active,
     inactive: inactiveDark,
     link: link,
     error: error,
-    errorBackground: errorBckDark,
+    errorBck: errorBckDark,
     info: info,
-    infoBackground: infoBckDark,
+    infoBck: infoBckDark,
     success: success,
-    successBackground: successBckDark,
+    successBck: successBckDark,
     warning: warning,
-    warningBackground: warningBckDark,
+    warningBck: warningBckDark,
     buttonText: 'white',
-    buttonBackground: active,
-    buttonPressedBackground: pressed,
-    buttonPressedBackgroundTran: pressedTranDark,
-    tabBarBackground: veryDarkGrey,
-    placeHolderText: darkGrey,
+    buttonBck: active,
+    buttonPressedBck: pressed,
+    buttonPressedBckTran: pressedTranDark,
+    tabBarBck: veryDarkGrey,
+    placeholderText: darkGrey,
     boxShadowActive: boxShadowActiveDark,
     boxShadowError: boxShadowErrorDark,
     pageBck: pageBckDark,

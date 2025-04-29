@@ -39,7 +39,7 @@ const AddNewItem = ({ title, icon }) => {
           {
             borderColor: pressed ? theme.active : theme.text,
             backgroundColor: pressed
-              ? theme.buttonPressedBackgroundTran
+              ? theme.buttonPressedBckTran
               : 'transparent',
           },
         ]}

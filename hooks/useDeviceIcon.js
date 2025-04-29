@@ -28,7 +28,7 @@ const useDeviceIcon = (device) => {
   // 🔁 Icon builders
   const getAvailableIcon = () =>
     device.available ? (
-      <MaterialCommunityIcons name='cloud' size={20} color='green' />
+      <MaterialCommunityIcons name='cloud-outline' size={20} color='green' />
     ) : (
       <MaterialCommunityIcons
         name='cloud-off-outline'
@@ -174,12 +174,7 @@ const useDeviceIcon = (device) => {
   // 🔁 Update icon states
   useEffect(() => {
     setDeviceIcon(getDeviceIcon())
-  }, [
-    device.device_type,
-    device.sub_type,
-    device.attributes?.nr_of_sockets,
-    theme,
-  ])
+  }, [device.device_type, device.available, theme])
 
   useEffect(() => {
     setAvailableIcon(getAvailableIcon())

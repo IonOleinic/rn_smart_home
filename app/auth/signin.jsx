@@ -94,7 +94,7 @@ const SignInScreen = () => {
             value={email}
             onChangeText={setEmail}
             placeholder='Email'
-            placeholderTextColor={theme.placeHolderText}
+            placeholderTextColor={theme.placeholderText}
             editable={!loading}
             selectTextOnFocus={!loading}
             style={[
@@ -128,7 +128,7 @@ const SignInScreen = () => {
             value={password}
             onChangeText={setPassword}
             placeholder='Password'
-            placeholderTextColor={theme.placeHolderText}
+            placeholderTextColor={theme.placeholderText}
             secureTextEntry
             editable={!loading}
             selectTextOnFocus={!loading}
@@ -176,8 +176,8 @@ const SignInScreen = () => {
             styles.button,
             {
               backgroundColor: pressed
-                ? theme.buttonPressedBackground
-                : theme.buttonBackground,
+                ? theme.buttonPressedBck
+                : theme.buttonBck,
               opacity: loading ? 0.6 : 1,
             },
           ]}
