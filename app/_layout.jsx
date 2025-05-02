@@ -2,14 +2,16 @@ import { Stack } from 'expo-router'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { ThemeProvider } from '@/context/ThemeProvider'
 import { AuthProvider } from '@/context/AuthProvider'
-
+import { PaperProvider } from 'react-native-paper'
 export default function RootLayout() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <SafeAreaProvider>
-          <StackScreens />
-        </SafeAreaProvider>
+        <PaperProvider>
+          <SafeAreaProvider>
+            <StackScreens />
+          </SafeAreaProvider>
+        </PaperProvider>
       </ThemeProvider>
     </AuthProvider>
   )

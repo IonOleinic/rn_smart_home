@@ -7,13 +7,13 @@ const serverPort = '5000'
 
 export default axios.create({
   baseURL: `${serverURL}:${serverPort}`,
-  timeout: 4000,
+  timeout: 1000,
   withCredentials: true,
 })
 
 export const axiosPrivate = axios.create({
   baseURL: `${serverURL}:${serverPort}`,
-  timeout: 4000,
+  timeout: 1000,
   withCredentials: true,
 })
 

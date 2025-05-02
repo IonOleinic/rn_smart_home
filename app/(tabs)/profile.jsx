@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import useTheme from '@/hooks/useTheme'
 import useLogout from '@/hooks/useLogout'
+import { Button } from 'react-native-paper'
 
 const Profile = () => {
   const { colorScheme, theme } = useTheme()
@@ -19,21 +20,15 @@ const Profile = () => {
       }}
     >
       <View style={styles.pageContainer}>
-        <View>
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              {
-                backgroundColor: pressed
-                  ? theme.buttonPressedBck
-                  : theme.buttonBck,
-              },
-            ]}
-            onPress={logout}
-          >
-            <Text style={styles.buttonText}>Sign Out</Text>
-          </Pressable>
-        </View>
+        <Button
+          mode='contained'
+          buttonColor={theme.active}
+          style={styles.button}
+          onPress={logout}
+          textColor='white'
+        >
+          Sign Out
+        </Button>
       </View>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
     </SafeAreaView>
@@ -54,14 +49,8 @@ const createStyleSheet = (theme) => {
       gap: 15,
     },
     button: {
-      padding: 10,
       borderRadius: 5,
-      width: 100,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    buttonText: {
-      color: theme.buttonText,
+      width: 110,
     },
   })
 }

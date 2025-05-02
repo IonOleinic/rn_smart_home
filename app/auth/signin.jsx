@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { View, TextInput, StyleSheet, Pressable, Text } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Link, useRouter } from 'expo-router'
 import useAxios from '@/hooks/useAxios'
@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import useTheme from '@/hooks/useTheme'
 import { StatusBar } from 'expo-status-bar'
 import Message from '@/components/Messages/Message'
+import { Button, TextInput } from 'react-native-paper'
 
 const SignInScreen = () => {
   const { colorScheme, theme } = useTheme()
@@ -18,8 +19,6 @@ const SignInScreen = () => {
   const { setAuth, persist, setPersist } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [emailFocused, setEmailFocused] = useState(false)
-  const [passwordFocused, setPasswordFocused] = useState(false)
   const [validEmail, setValidEmail] = useState(false)
   const [validPassword, setValidPassword] = useState(false)
   const [errorVisibility, setErrorVisibility] = useState(false)
@@ -77,76 +76,31 @@ const SignInScreen = () => {
         <View style={styles.formTitle}>
           <Text style={styles.formTitleText}>Sign In</Text>
         </View>
-        <View
-          style={[
-            styles.textInputContainer,
-            { marginBottom: 15 },
-            {
-              backgroundColor: validEmail
-                ? emailFocused
-                  ? theme.boxShadowActive
-                  : 'transparent'
-                : theme.boxShadowError,
-            },
-          ]}
-        >
-          <TextInput
-            value={email}
-            onChangeText={setEmail}
-            placeholder='Email'
-            placeholderTextColor={theme.placeholderText}
-            editable={!loading}
-            selectTextOnFocus={!loading}
-            style={[
-              styles.textInput,
-              {
-                borderColor: validEmail
-                  ? emailFocused
-                    ? theme.boxShadowActive
-                    : theme.text
-                  : theme.error,
-              },
-              { opacity: loading ? 0.6 : 1 },
-            ]}
-            onFocus={() => setEmailFocused(true)}
-            onBlur={() => setEmailFocused(false)}
-          />
-        </View>
-        <View
-          style={[
-            styles.textInputContainer,
-            {
-              backgroundColor: validPassword
-                ? passwordFocused
-                  ? theme.boxShadowActive
-                  : 'transparent'
-                : theme.boxShadowError,
-            },
-          ]}
-        >
-          <TextInput
-            value={password}
-            onChangeText={setPassword}
-            placeholder='Password'
-            placeholderTextColor={theme.placeholderText}
-            secureTextEntry
-            editable={!loading}
-            selectTextOnFocus={!loading}
-            style={[
-              styles.textInput,
-              {
-                borderColor: validPassword
-                  ? passwordFocused
-                    ? theme.boxShadowActive
-                    : theme.text
-                  : theme.error,
-              },
-              { opacity: loading ? 0.6 : 1 },
-            ]}
-            onFocus={() => setPasswordFocused(true)}
-            onBlur={() => setPasswordFocused(false)}
-          />
-        </View>
+        <TextInput
+          mode='outlined'
+          label='Email'
+          value={email}
+          onChangeText={setEmail}
+          placeholderTextColor={theme.placeholderText}
+          disabled={loading}
+          selectTextOnFocus={!loading}
+          style={styles.textInput}
+          activeOutlineColor={theme.active}
+          error={!validEmail}
+        />
+        <TextInput
+          mode='outlined'
+          label='Password'
+          value={password}
+          onChangeText={setPassword}
+          placeholderTextColor={theme.placeholderText}
+          secureTextEntry
+          disabled={loading}
+          selectTextOnFocus={!loading}
+          style={styles.textInput}
+          activeOutlineColor={theme.active}
+          error={!validPassword}
+        />
         <View style={styles.checkboxContainer}>
           <AdvancedCheckbox
             value={persist}
@@ -170,23 +124,18 @@ const SignInScreen = () => {
         >
           <Message severity={'error'} text={errorMsg} />
         </View>
-        <Pressable
-          onPress={handleLogin}
-          style={({ pressed }) => [
-            styles.button,
-            {
-              backgroundColor: pressed
-                ? theme.buttonPressedBck
-                : theme.buttonBck,
-              opacity: loading ? 0.6 : 1,
-            },
-          ]}
+        <Button
+          mode='contained'
+          buttonColor={theme.active}
+          style={styles.button}
           disabled={loading}
+          onPress={handleLogin}
+          dark={colorScheme === 'dark'}
         >
           <Text style={styles.buttonText}>
             {loading ? 'Loging in...' : 'Login'}
           </Text>
-        </Pressable>
+        </Button>
         <View style={styles.externalLinks}>
           <Link style={styles.link} href={'auth/forgot'}>
             Forgot password ?
@@ -244,10 +193,6 @@ const createStyleSheet = (theme) => {
       width: '100%',
       borderColor: theme.text,
       color: theme.text,
-      paddingLeft: 10,
-      borderRadius: 6,
-      borderWidth: 1,
-      backgroundColor: theme.background,
     },
     checkboxContainer: {
       marginLeft: 5,
@@ -271,9 +216,9 @@ const createStyleSheet = (theme) => {
       marginTop: 20,
     },
     buttonText: {
-      color: theme.buttonText,
       fontSize: 18,
       fontWeight: 'bold',
+      color: 'white',
     },
     externalLinks: {
       marginTop: 20,

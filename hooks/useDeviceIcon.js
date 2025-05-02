@@ -22,7 +22,7 @@ const useDeviceIcon = (device) => {
   const [deviceIcon, setDeviceIcon] = useState(<></>)
   const [availableIcon, setAvailableIcon] = useState(null)
   const [batteryIcon, setBatteryIcon] = useState(null)
-  const [favIcon, setFavIcon] = useState(null)
+  const [favIcon, setFavIcon] = useState(<></>)
   const [favBool, setFavBool] = useState(false)
 
   // 🔁 Icon builders

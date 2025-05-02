@@ -1,5 +1,5 @@
 import { Pressable } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Tabs } from 'expo-router'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'

@@ -1,5 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { useEffect, useState } from 'react'
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native'
+import { useEffect, useRef, useState } from 'react'
 import useTheme from '@/hooks/useTheme'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import useDeviceIcon from '@/hooks/useDeviceIcon'
@@ -8,16 +8,21 @@ import { socket } from '@/api/io'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import useFinalDevice from '@/hooks/useFinalDevice'
 import InactiveLayer from '../Layers/InactiveLayer'
+import { Button, Menu, Divider, TouchableRipple } from 'react-native-paper'
 
 const Device = ({ initDevice }) => {
   const axios = useAxiosPrivate()
-  const { theme } = useTheme()
+  const { theme, colorScheme } = useTheme()
   const [visibility, setVisibility] = useState(false)
   const [device, setDevice] = useState(initDevice)
   const styles = createStyleSheet(theme)
   const { deviceIcon, batteryIcon, availableIcon, favBool, favIcon } =
     useDeviceIcon(device)
   const finalDevice = useFinalDevice(device)
+
+  const [visible, setVisible] = useState(false)
+  const openMenu = () => setVisible(true)
+  const closeMenu = () => setVisible(false)
 
   const updateDevice = async () => {
     try {
@@ -52,7 +57,6 @@ const Device = ({ initDevice }) => {
       }
     }
   }, [])
-
   return (
     <View style={styles.device}>
       <View style={styles.deviceTop}>
@@ -93,28 +97,69 @@ const Device = ({ initDevice }) => {
               color={device.available ? theme.text : theme.inactive}
             />
             <Text
-              style={{ color: device.available ? theme.text : theme.inactive }}
+              style={{
+                color: device.available ? theme.text : theme.inactive,
+              }}
             >
               {device.group_name}
             </Text>
           </View>
         </Pressable>
-        <Pressable
-          style={({ pressed }) => [
-            styles.favIcon,
-            { backgroundColor: pressed ? theme.iconPressedBck : 'transparent' },
-          ]}
+        <TouchableRipple
+          borderless={true}
+          rippleColor={theme.ripple}
           onPress={() => {
             device.favorite = !favBool
             updateDevice()
           }}
+          style={styles.favIcon}
         >
           {favIcon}
-        </Pressable>
-        <Pressable onPress={() => {}} style={styles.varticalMenu}>
-          <MaterialIcons name='more-vert' size={28} color={theme.text} />
-        </Pressable>
+        </TouchableRipple>
+        <TouchableRipple
+          borderless={true}
+          style={styles.varticalMenu}
+          rippleColor={theme.ripple}
+          onPress={openMenu}
+        >
+          <Menu
+            visible={visible}
+            onDismiss={closeMenu}
+            anchor={
+              <MaterialIcons name='more-vert' size={28} color={theme.text} />
+            }
+          >
+            <Menu.Item
+              leadingIcon='information-outline'
+              onPress={() => {
+                closeMenu()
+              }}
+              title='Info'
+            />
+            <Menu.Item
+              leadingIcon='pencil-outline'
+              onPress={() => {
+                closeMenu()
+              }}
+              title='Edit'
+            />
 
+            <Menu.Item
+              leadingIcon='trash-can-outline'
+              onPress={() => {
+                closeMenu()
+              }}
+              title='Delete'
+            />
+            <Menu.Item
+              leadingIcon='cancel'
+              onPress={() => {
+                closeMenu()
+              }}
+              title='Cancel'
+            />
+          </Menu>
+        </TouchableRipple>
         <View style={styles.deviceStatus}>
           <View style={styles.deviceAvailable}>
             {availableIcon}
@@ -199,10 +244,12 @@ const createStyleSheet = (theme) => {
       borderRadius: '50%',
     },
     varticalMenu: {
+      borderRadius: '50%',
       width: 36,
       height: 36,
       alignItems: 'center',
       justifyContent: 'center',
+      overflow: 'hidden',
     },
     finalDevice: {
       position: 'relative',

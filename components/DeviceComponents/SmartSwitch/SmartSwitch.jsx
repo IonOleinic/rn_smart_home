@@ -91,7 +91,7 @@ function SmartSwitch({ device }) {
             },
           ]}
         >
-          <Text style={styles.energyTodayText}>{sensorData.Today}kW</Text>
+          <Text style={styles.energyTodayText}>{sensorData.Today} kW</Text>
         </View>
         <View style={styles.sensor}>
           <View style={styles.sensorItem}>
@@ -118,7 +118,6 @@ function SmartSwitch({ device }) {
       </View>
     )
   }
-
   //init power buttons
   for (let i = 0; i < device.attributes?.nr_of_sockets; i++) {
     powerButtons.push(
@@ -131,7 +130,6 @@ function SmartSwitch({ device }) {
       />
     )
   }
-
   return (
     <View style={styles.smartSwitch}>
       <View style={styles.powerButtonsContainer}>
@@ -161,14 +159,12 @@ const createStyleSheet = (theme) => {
       alignItems: 'center',
       justifyContent: 'center',
       height: '100%',
-      paddingVertical: 8,
     },
     powerButtonsContainer: {
       alignItems: 'center',
       justifyContent: 'center',
       width: '100%',
-      minHeight: 130,
-      maxHeight: 200,
+      height: 140,
     },
     powerButtons: {
       flexWrap: 'wrap',
@@ -192,7 +188,6 @@ const createStyleSheet = (theme) => {
     },
     sensorContainer: {
       width: '100%',
-      gap: 4,
       alignItems: 'center',
       justifyContent: 'center',
     },

@@ -1,24 +1,28 @@
 import useTheme from '@/hooks/useTheme'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
-import { Pressable, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
+import { TouchableRipple } from 'react-native-paper'
 
 const PowerBtn = ({ isChecked, size, handlePower, id }) => {
   const { theme } = useTheme()
   const styles = createStyleSheet(theme)
   return (
-    <Pressable
+    <TouchableRipple
+      borderless={true}
+      rippleColor={isChecked ? theme.ripplePwrBtnOff : theme.ripplePwrBtnOn}
       style={styles.powerBtn}
       id={`power_btn${id}`}
       onPress={() => {
         handlePower(id)
       }}
+      foreground={true}
     >
       <FontAwesome5
         name='power-off'
         size={size}
         color={isChecked ? theme.active : theme.inactive}
       />
-    </Pressable>
+    </TouchableRipple>
   )
 }
 
@@ -30,6 +34,7 @@ const createStyleSheet = (theme) => {
       justifyContent: 'center',
       alignItems: 'center',
       margin: 6,
+      borderRadius: '50%',
     },
   })
 }

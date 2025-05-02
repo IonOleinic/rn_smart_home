@@ -16,10 +16,6 @@ export const ThemeProvider = ({ children }) => {
     return () => subscription.remove()
   }, [])
 
-  useEffect(() => {
-    const theme = colorScheme === 'dark' ? Colors.dark : Colors.light
-  }, [colorScheme])
-
   return (
     <ThemeContext.Provider value={{ colorScheme, setColorScheme, theme }}>
       {children}

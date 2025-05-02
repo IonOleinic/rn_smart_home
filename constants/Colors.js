@@ -64,6 +64,8 @@ const boxShadowActiveLight = indigoShadowLight
 const boxShadowActiveDark = indigoShadowDark
 const boxShadowErrorLight = redShadowLight
 const boxShadowErrorDark = redShadowDark
+const inputBorderLight = '#d1d5db'
+const inputBorderDark = '#d1d5db'
 const link = blue
 const linkPressed = pressedBlue
 const error = red
@@ -80,6 +82,12 @@ const warningBckLight = goldTranLight
 const warningBckDark = goldTranDark
 const pageBckLight = lightGrey
 const pageBckDark = veryDarkGrey
+const rippleLight = 'rgba(0, 0, 0, 0.22)'
+const rippleDark = 'rgba(255, 255, 255, 0.32)'
+const ripplePwrBtnOnLight = indigoTranLight
+const ripplePwrBtnOffLight = 'rgba(0, 0, 0, 0.22)'
+const ripplePwrBtnOnDark = indigoTranDark
+const ripplePwrBtnOffDark = 'rgba(255, 255, 255, 0.32)'
 
 export const Colors = {
   light: {
@@ -108,6 +116,10 @@ export const Colors = {
     boxShadowActive: boxShadowActiveLight,
     boxShadowError: boxShadowErrorLight,
     pageBck: pageBckLight,
+    inputBorder: inputBorderLight,
+    ripple: rippleLight,
+    ripplePwrBtnOn: ripplePwrBtnOnLight,
+    ripplePwrBtnOff: ripplePwrBtnOffLight,
   },
   dark: {
     text: 'white',
@@ -134,5 +146,9 @@ export const Colors = {
     boxShadowActive: boxShadowActiveDark,
     boxShadowError: boxShadowErrorDark,
     pageBck: pageBckDark,
+    inputBorder: inputBorderDark,
+    ripple: rippleDark,
+    ripplePwrBtnOn: ripplePwrBtnOnDark,
+    ripplePwrBtnOff: ripplePwrBtnOffDark,
   },
 }

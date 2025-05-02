@@ -93,7 +93,7 @@ const createStyleSheet = (theme) => {
     },
     doorStatusText: {
       fontSize: 24,
-      fontWeight: 'bold',
+      fontWeight: 500,
       textTransform: 'capitalize',
       letterSpacing: 1,
     },
