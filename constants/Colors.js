@@ -53,6 +53,7 @@ const veryDarkGrey = 'rgb(55, 55, 55)'
 
 /*========== default colors ============*/
 const active = indigo
+const danger = red
 const inactiveLight = mediumGrey
 const inactiveDark = darkGrey
 const pressed = pressedIndigo
@@ -84,10 +85,10 @@ const pageBckLight = lightGrey
 const pageBckDark = veryDarkGrey
 const rippleLight = 'rgba(0, 0, 0, 0.22)'
 const rippleDark = 'rgba(255, 255, 255, 0.32)'
-const ripplePwrBtnOnLight = indigoTranLight
-const ripplePwrBtnOffLight = 'rgba(0, 0, 0, 0.22)'
-const ripplePwrBtnOnDark = indigoTranDark
-const ripplePwrBtnOffDark = 'rgba(255, 255, 255, 0.32)'
+const rippleActiveLight = indigoTranLight
+const rippleInactiveLight = rippleLight
+const rippleActiveDark = indigoTranDark
+const rippleInactiveDark = rippleDark
 
 export const Colors = {
   light: {
@@ -97,6 +98,7 @@ export const Colors = {
     iconPressedBck: iconPressedBckLight,
     active: active,
     inactive: inactiveLight,
+    danger: danger,
     link: link,
     linkPressed: linkPressed,
     error: error,
@@ -118,8 +120,8 @@ export const Colors = {
     pageBck: pageBckLight,
     inputBorder: inputBorderLight,
     ripple: rippleLight,
-    ripplePwrBtnOn: ripplePwrBtnOnLight,
-    ripplePwrBtnOff: ripplePwrBtnOffLight,
+    ripplePwrBtnOn: rippleActiveLight,
+    ripplePwrBtnOff: rippleInactiveLight,
   },
   dark: {
     text: 'white',
@@ -128,6 +130,7 @@ export const Colors = {
     iconPressedBck: iconPressedBckDark,
     active: active,
     inactive: inactiveDark,
+    danger: danger,
     link: link,
     error: error,
     errorBck: errorBckDark,
@@ -148,7 +151,7 @@ export const Colors = {
     pageBck: pageBckDark,
     inputBorder: inputBorderDark,
     ripple: rippleDark,
-    ripplePwrBtnOn: ripplePwrBtnOnDark,
-    ripplePwrBtnOff: ripplePwrBtnOffDark,
+    ripplePwrBtnOn: rippleActiveDark,
+    ripplePwrBtnOff: rippleInactiveDark,
   },
 }

@@ -1,6 +1,4 @@
 import { StyleSheet, Text, View, Pressable } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { StatusBar } from 'expo-status-bar'
 import useTheme from '@/hooks/useTheme'
 import { useState } from 'react'
 
@@ -10,40 +8,29 @@ const Scenes = () => {
   const [toolbarExpanded, setToolbarExpanded] = useState(false)
   const styles = createStyleSheet(theme)
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: theme.background,
-        paddingBottom: 64,
-      }}
+    <View
+      style={[
+        styles.pageContainer,
+        { paddingBottom: toolbarExpanded ? 0 : 15 },
+      ]}
     >
       <View
-        style={[
-          styles.pageContainer,
-          { paddingBottom: toolbarExpanded ? 0 : 15 },
-        ]}
+        style={
+          toolbarExpanded
+            ? [styles.toolbar, styles.toolbarExpanded]
+            : styles.toolbar
+        }
       >
-        <View
-          style={
-            toolbarExpanded
-              ? [styles.toolbar, styles.toolbarExpanded]
-              : styles.toolbar
-          }
-        >
-          <Pressable onPress={() => setToolbarExpanded((prev) => !prev)}>
-            <Text style={{ color: theme.text }}>Toolbar</Text>
-          </Pressable>
-        </View>
-        <View style={styles.scenes}>
-          <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
-            Scenes
-          </Text>
-        </View>
+        <Pressable onPress={() => setToolbarExpanded((prev) => !prev)}>
+          <Text style={{ color: theme.text }}>Toolbar</Text>
+        </Pressable>
       </View>
-      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-    </SafeAreaView>
+      <View style={styles.scenes}>
+        <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
+          Scenes
+        </Text>
+      </View>
+    </View>
   )
 }
 

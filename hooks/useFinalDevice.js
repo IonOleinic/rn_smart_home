@@ -4,6 +4,7 @@ import SmartMotionSensor from '@/components/DeviceComponents/SmartMotionSensor/S
 import SmartDoorSensor from '@/components/DeviceComponents/SmartDoorSensor/SmartDoorSensor'
 import SmartSwitch from '@/components/DeviceComponents/SmartSwitch/SmartSwitch'
 import SmartSirenAlarm from '@/components/DeviceComponents/SmartSirenAlarm/SmartSirenAlarm'
+import SmartLed from '@/components/DeviceComponents/SmartLed/SmartLed'
 
 function useFinalDevice(device) {
   const [finalDevice, setFinalDevice] = useState(<></>)
@@ -22,7 +23,7 @@ function useFinalDevice(device) {
         } else if (device.device_type === 'smartSirenAlarm') {
           setFinalDevice(<SmartSirenAlarm device={device} />)
         } else if (device.device_type === 'smartLed') {
-          setFinalDevice(<></>)
+          setFinalDevice(<SmartLed device={device} />)
         } else if (device.device_type === 'smartMotionSensor') {
           setFinalDevice(<SmartMotionSensor device={device} />)
         }

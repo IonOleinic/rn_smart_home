@@ -2,7 +2,7 @@ import useTheme from '@/hooks/useTheme'
 import { StyleSheet, Text, View } from 'react-native'
 
 const TabBarIcon = ({ title, icon, focused }) => {
-  const { colorScheme, setColorScheme, theme } = useTheme()
+  const { colorScheme, theme } = useTheme()
   const styles = createStyleSheet(theme, colorScheme)
   if (focused) {
     return (

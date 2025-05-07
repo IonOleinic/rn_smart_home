@@ -1,5 +1,4 @@
 import { Pressable } from 'react-native'
-import React, { useEffect } from 'react'
 import { Tabs } from 'expo-router'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
@@ -8,6 +7,7 @@ import AntDesign from '@expo/vector-icons/AntDesign'
 import TabBarIcon from '@/components/TabBar/TabBarIcon'
 import useTheme from '@/hooks/useTheme'
 import PersistLogin from '@/components/Auth/PersistLogin'
+import CustomHeader from '@/components/CustomHeader/CustomHeader'
 const tabBarIconSize = 25
 
 const TabsLayout = () => {
@@ -96,8 +96,11 @@ const TabsLayout = () => {
         <Tabs.Screen
           name='add'
           options={{
-            title: 'Add',
-            headerShown: false,
+            title: 'Add menu',
+            headerShown: true,
+            header: ({ navigation }) => {
+              return <CustomHeader navigation={navigation} title='Add Menu' />
+            },
             tabBarIcon: ({ focused }) => (
               <TabBarIcon
                 focused={focused}
@@ -149,7 +152,10 @@ const TabsLayout = () => {
           name='profile'
           options={{
             title: 'Profile',
-            headerShown: false,
+            headerShown: true,
+            header: ({ navigation }) => {
+              return <CustomHeader navigation={navigation} title='Profile' />
+            },
             tabBarIcon: ({ focused }) => (
               <TabBarIcon
                 focused={focused}

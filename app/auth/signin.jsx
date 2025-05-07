@@ -1,19 +1,16 @@
 import { useEffect, useState } from 'react'
 import { View, StyleSheet, Text } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { Link, useRouter } from 'expo-router'
 import useAxios from '@/hooks/useAxios'
 import useAuth from '@/hooks/useAuth'
 import { AdvancedCheckbox } from 'react-native-advanced-checkbox'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import useTheme from '@/hooks/useTheme'
-import { StatusBar } from 'expo-status-bar'
 import Message from '@/components/Messages/Message'
 import { Button, TextInput } from 'react-native-paper'
 
 const SignInScreen = () => {
   const { colorScheme, theme } = useTheme()
-
   const styles = createStyleSheet(theme)
   const axios = useAxios()
   const { setAuth, persist, setPersist } = useAuth()
@@ -71,7 +68,7 @@ const SignInScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.form}>
         <View style={styles.formTitle}>
           <Text style={styles.formTitleText}>Sign In</Text>
@@ -126,15 +123,14 @@ const SignInScreen = () => {
         </View>
         <Button
           mode='contained'
+          labelStyle={styles.buttonText}
           buttonColor={theme.active}
           style={styles.button}
+          dark={colorScheme === 'dark'}
           disabled={loading}
           onPress={handleLogin}
-          dark={colorScheme === 'dark'}
         >
-          <Text style={styles.buttonText}>
-            {loading ? 'Loging in...' : 'Login'}
-          </Text>
+          {loading ? 'Login...' : 'Login'}
         </Button>
         <View style={styles.externalLinks}>
           <Link style={styles.link} href={'auth/forgot'}>
@@ -148,9 +144,7 @@ const SignInScreen = () => {
           </View>
         </View>
       </View>
-
-      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -209,13 +203,14 @@ const createStyleSheet = (theme) => {
     button: {
       alignSelf: 'center',
       width: 150,
-      height: 45,
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: 6,
       marginTop: 20,
+      overflow: 'hidden',
     },
     buttonText: {
+      width: '100%',
       fontSize: 18,
       fontWeight: 'bold',
       color: 'white',

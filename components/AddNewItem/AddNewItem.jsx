@@ -31,7 +31,11 @@ const AddNewItem = ({ title, icon }) => {
           ? FadeInRight.delay(200)
           : FadeInDown.delay(350)
       }
-      style={{ borderRadius: 20, overflow: 'hidden' }}
+      style={{
+        borderRadius: 20,
+        overflow: 'hidden',
+        backgroundColor: theme.background,
+      }}
     >
       <Pressable
         style={({ pressed }) => [
@@ -77,6 +81,7 @@ const createStyleSheet = (theme, colorScheme) => {
       width: 150,
       height: 150,
       borderColor: theme.text,
+      backgroundColor: 'red',
     },
     addNewItemText: {
       color: theme.text,

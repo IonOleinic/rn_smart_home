@@ -1,5 +1,5 @@
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native'
-import { useEffect, useRef, useState } from 'react'
+import { Pressable, StyleSheet, View } from 'react-native'
+import { useEffect, useState } from 'react'
 import useTheme from '@/hooks/useTheme'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import useDeviceIcon from '@/hooks/useDeviceIcon'
@@ -8,11 +8,20 @@ import { socket } from '@/api/io'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import useFinalDevice from '@/hooks/useFinalDevice'
 import InactiveLayer from '../Layers/InactiveLayer'
-import { Button, Menu, Divider, TouchableRipple } from 'react-native-paper'
+import {
+  Menu,
+  TouchableRipple,
+  Surface,
+  Text,
+  Portal,
+  Dialog,
+  Button,
+  Icon,
+} from 'react-native-paper'
 
 const Device = ({ initDevice }) => {
   const axios = useAxiosPrivate()
-  const { theme, colorScheme } = useTheme()
+  const { theme } = useTheme()
   const [visibility, setVisibility] = useState(false)
   const [device, setDevice] = useState(initDevice)
   const styles = createStyleSheet(theme)
@@ -20,9 +29,13 @@ const Device = ({ initDevice }) => {
     useDeviceIcon(device)
   const finalDevice = useFinalDevice(device)
 
-  const [visible, setVisible] = useState(false)
-  const openMenu = () => setVisible(true)
-  const closeMenu = () => setVisible(false)
+  const [menuVisible, setMenuVisible] = useState(false)
+  const openMenu = () => setMenuVisible(true)
+  const closeMenu = () => setMenuVisible(false)
+
+  const [dialogVisible, setDialogVisible] = useState(false)
+  const showDialog = () => setDialogVisible(true)
+  const hideDialog = () => setDialogVisible(false)
 
   const updateDevice = async () => {
     try {
@@ -58,7 +71,7 @@ const Device = ({ initDevice }) => {
     }
   }, [])
   return (
-    <View style={styles.device}>
+    <Surface style={styles.device} elevation={2}>
       <View style={styles.deviceTop}>
         <Pressable
           style={visibility ? { transform: [{ rotate: '180deg' }] } : {}}
@@ -118,16 +131,24 @@ const Device = ({ initDevice }) => {
         </TouchableRipple>
         <TouchableRipple
           borderless={true}
-          style={styles.varticalMenu}
+          style={[
+            styles.varticalMenu,
+            {
+              backgroundColor: menuVisible
+                ? theme.iconPressedBck
+                : 'transparent',
+            },
+          ]}
           rippleColor={theme.ripple}
           onPress={openMenu}
         >
           <Menu
-            visible={visible}
+            visible={menuVisible}
             onDismiss={closeMenu}
             anchor={
               <MaterialIcons name='more-vert' size={28} color={theme.text} />
             }
+            style={{ marginTop: 35 }}
           >
             <Menu.Item
               leadingIcon='information-outline'
@@ -147,6 +168,7 @@ const Device = ({ initDevice }) => {
             <Menu.Item
               leadingIcon='trash-can-outline'
               onPress={() => {
+                showDialog()
                 closeMenu()
               }}
               title='Delete'
@@ -189,8 +211,52 @@ const Device = ({ initDevice }) => {
       >
         {finalDevice}
         <InactiveLayer visibility={!device.available} />
+        <Portal>
+          <Dialog
+            visible={dialogVisible}
+            onDismiss={hideDialog}
+            style={{ borderRadius: 12 }}
+          >
+            <Dialog.Title>
+              <Text>Delete confirmation</Text>
+            </Dialog.Title>
+            <Dialog.Content>
+              <View
+                style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}
+              >
+                <Icon source='trash-can-outline' size={30} />
+                <Text variant='bodyMedium'>
+                  Do you want to move to trash device {device.name}?
+                </Text>
+              </View>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button
+                mode='outlined'
+                textColor={theme.active}
+                style={[styles.dialogButton, { borderColor: theme.active }]}
+                onPress={() => {
+                  hideDialog()
+                }}
+              >
+                No
+              </Button>
+              <Button
+                mode='outlined'
+                textColor={'white'}
+                style={[styles.dialogButton, { borderColor: theme.error }]}
+                buttonColor={theme.error}
+                onPress={() => {
+                  hideDialog()
+                }}
+              >
+                Yes
+              </Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
       </View>
-    </View>
+    </Surface>
   )
 }
 
@@ -282,6 +348,11 @@ const createStyleSheet = (theme) => {
     },
     deviceBatteryHidden: {
       display: 'none',
+    },
+    dialogButton: {
+      marginHorizontal: 15,
+      borderRadius: 6,
+      width: 50,
     },
   })
 }

@@ -1,16 +1,17 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { useCallback, useEffect, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { StatusBar } from 'expo-status-bar'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import useTheme from '@/hooks/useTheme'
 import { useFocusEffect } from 'expo-router'
 import Animated, { LinearTransition } from 'react-native-reanimated'
 import Device from '@/components/DeviceComponents/Device'
+import { useHeaderHeight } from '@react-navigation/elements'
+import TabBarSafeAreaWrapper from '@/components/TabBar/TabBarSafeAreaWrapper'
 
 const Devices = () => {
   const { colorScheme, theme } = useTheme()
   const styles = createStyleSheet(theme)
+  const headerHeight = useHeaderHeight()
   const [devices, setDevices] = useState([])
   const axios = useAxiosPrivate()
   const [loading, setLoading] = useState(true)
@@ -40,18 +41,11 @@ const Devices = () => {
   // )
   useEffect(() => {
     getDevices()
+    console.log(headerHeight)
   }, [])
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: theme.background,
-        paddingBottom: 64,
-      }}
-    >
+    <TabBarSafeAreaWrapper>
       <View
         style={[
           styles.pageContainer,
@@ -78,8 +72,7 @@ const Devices = () => {
           keyboardDismissMode='on-drag'
         />
       </View>
-      <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-    </SafeAreaView>
+    </TabBarSafeAreaWrapper>
   )
 }
 
@@ -107,6 +100,13 @@ const createStyleSheet = (theme) => {
       justifyContent: 'center',
       zIndex: 9,
       backgroundColor: theme.background,
+      // ✅ Elevation (Android)
+      elevation: 4,
+      // ✅ Shadow (iOS)
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
     },
     toolbarExpanded: {
       position: 'absolute',

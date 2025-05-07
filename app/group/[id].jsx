@@ -1,7 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { StatusBar } from 'expo-status-bar'
 import useTheme from '@/hooks/useTheme'
 import RequireAuth from '@/components/Auth/RequireAuth'
 
@@ -11,21 +9,11 @@ const GroupDetails = () => {
   const styles = createStyleSheet(theme, colorScheme)
   return (
     <RequireAuth>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: theme.background,
-        }}
-      >
-        <View>
-          <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
-            Group Details {id}
-          </Text>
-        </View>
-        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-      </SafeAreaView>
+      <View>
+        <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
+          Group Details {id}
+        </Text>
+      </View>
     </RequireAuth>
   )
 }

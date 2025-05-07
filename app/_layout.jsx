@@ -3,13 +3,17 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { ThemeProvider } from '@/context/ThemeProvider'
 import { AuthProvider } from '@/context/AuthProvider'
 import { PaperProvider } from 'react-native-paper'
+import CustomHeader from '@/components/CustomHeader/CustomHeader'
+import SafeAreaWrapper from '@/components/SafeArea/SafeAreaWrapper'
 export default function RootLayout() {
   return (
     <AuthProvider>
       <ThemeProvider>
         <PaperProvider>
           <SafeAreaProvider>
-            <StackScreens />
+            <SafeAreaWrapper>
+              <StackScreens />
+            </SafeAreaWrapper>
           </SafeAreaProvider>
         </PaperProvider>
       </ThemeProvider>
@@ -22,11 +26,38 @@ function StackScreens() {
     <Stack>
       <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
       <Stack.Screen name='device/[id]' options={{ headerShown: false }} />
-      <Stack.Screen name='device/add' options={{ headerShown: false }} />
+      <Stack.Screen
+        name='device/add'
+        options={{
+          title: 'Add Device',
+          headerShown: true,
+          header: ({ navigation }) => {
+            return <CustomHeader navigation={navigation} title='Add Device' />
+          },
+        }}
+      />
       <Stack.Screen name='scene/[id]' options={{ headerShown: false }} />
-      <Stack.Screen name='scene/add' options={{ headerShown: false }} />
+      <Stack.Screen
+        name='scene/add'
+        options={{
+          title: 'Add Scene',
+          headerShown: true,
+          header: ({ navigation }) => {
+            return <CustomHeader navigation={navigation} title='Add Scene' />
+          },
+        }}
+      />
       <Stack.Screen name='group/[id]' options={{ headerShown: false }} />
-      <Stack.Screen name='group/add' options={{ headerShown: false }} />
+      <Stack.Screen
+        name='group/add'
+        options={{
+          title: 'Add Group',
+          headerShown: true,
+          header: ({ navigation }) => {
+            return <CustomHeader navigation={navigation} title='Add Group' />
+          },
+        }}
+      />
       <Stack.Screen name='auth/signin' options={{ headerShown: false }} />
     </Stack>
   )

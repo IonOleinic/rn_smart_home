@@ -26,16 +26,13 @@ const useDeviceIcon = (device) => {
   const [favBool, setFavBool] = useState(false)
 
   // 🔁 Icon builders
-  const getAvailableIcon = () =>
-    device.available ? (
-      <MaterialCommunityIcons name='cloud-outline' size={20} color='green' />
-    ) : (
-      <MaterialCommunityIcons
-        name='cloud-off-outline'
-        size={20}
-        color={theme.inactive}
-      />
-    )
+  const getAvailableIcon = () => (
+    <MaterialCommunityIcons
+      name={device.available ? 'access-point' : 'access-point-off'}
+      size={20}
+      color={device.available ? 'green' : theme.inactive}
+    />
+  )
 
   const getBatteryIcon = () => {
     const batteryLevel = device.attributes?.battery_level
