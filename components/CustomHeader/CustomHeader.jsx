@@ -3,49 +3,75 @@ import useTheme from '@/hooks/useTheme'
 import { TouchableRipple } from 'react-native-paper'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 
-const CustomHeader = ({ navigation, title }) => {
+const CustomHeader = ({
+  navigation,
+  title,
+  hideBackIcon = false,
+  titlePosition = 'left', // 'center' or 'left'
+}) => {
   const { theme } = useTheme()
+
   return (
     <View
       style={{
+        width: '100%',
         height: 68,
         backgroundColor: theme.background,
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 20,
-        // ✅ Elevation (Android)
         elevation: 4,
-        // ✅ Shadow (iOS)
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 4,
-        // ✅ For consistent background in shadow
-        zIndex: 1,
+        justifyContent: 'space-between',
       }}
     >
-      <TouchableRipple
-        rippleColor={theme.ripple}
-        borderless={true}
-        onPress={() => navigation.goBack()}
-        style={{
-          padding: 8,
-          borderRadius: '50%',
-        }}
-      >
-        <MaterialIcons name='arrow-back' size={24} color={theme.text} />
-      </TouchableRipple>
+      {/* Back Icon - always on the left */}
+      {!hideBackIcon ? (
+        <TouchableRipple
+          borderless={true}
+          rippleColor={theme.ripple}
+          onPress={() => navigation.goBack()}
+          style={{
+            width: 40,
+            height: 40,
+            padding: 6,
+            borderRadius: '50%',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <MaterialIcons name='arrow-back' size={24} color={theme.text} />
+        </TouchableRipple>
+      ) : (
+        <View style={{ width: 40 }} /> // placeholder for spacing if icon is hidden
+      )}
 
-      <Text
+      {/* Title - center or left-aligned */}
+      <View
         style={{
-          fontSize: 18,
-          fontWeight: 'bold',
-          color: theme.text,
-          marginLeft: 16,
+          flex: 1,
+          alignItems: titlePosition === 'center' ? 'center' : 'flex-start',
+          marginLeft: !hideBackIcon && titlePosition === 'left' ? 10 : 0,
         }}
       >
-        {title}
-      </Text>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: theme.text,
+          }}
+          numberOfLines={1}
+          ellipsizeMode='tail'
+        >
+          {title}
+        </Text>
+      </View>
+
+      {/* Optional right-side placeholder to balance center alignment */}
+      <View style={{ width: 40 }} />
     </View>
   )
 }

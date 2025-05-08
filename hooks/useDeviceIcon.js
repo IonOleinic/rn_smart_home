@@ -30,7 +30,7 @@ const useDeviceIcon = (device) => {
     <MaterialCommunityIcons
       name={device.available ? 'access-point' : 'access-point-off'}
       size={20}
-      color={device.available ? 'green' : theme.inactive}
+      color={device.available ? theme.safe : theme.inactive}
     />
   )
 
@@ -39,20 +39,30 @@ const useDeviceIcon = (device) => {
     switch (batteryLevel) {
       case 1:
         return (
-          <MaterialCommunityIcons name='battery-20' size={24} color='red' />
+          <MaterialCommunityIcons
+            name='battery-20'
+            size={24}
+            color={theme.danger}
+          />
         )
       case 2:
         return (
-          <MaterialCommunityIcons name='battery-50' size={20} color='gold' />
+          <MaterialCommunityIcons
+            name='battery-50'
+            size={20}
+            color={theme.warning}
+          />
         )
       case 3:
-        return <MaterialCommunityIcons name='battery' size={20} color='green' />
+        return (
+          <MaterialCommunityIcons name='battery' size={20} color={theme.safe} />
+        )
       case 4:
         return (
           <MaterialCommunityIcons
             name='battery-charging'
             size={20}
-            color='green'
+            color={theme.safe}
           />
         )
       default:

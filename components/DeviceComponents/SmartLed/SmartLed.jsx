@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, View } from 'react-native'
 import PaletteItem from './PaletteItem'
 import { useEffect, useState } from 'react'
 import useTheme from '@/hooks/useTheme'
@@ -7,10 +7,9 @@ import LedStripIcon from './Icons/LedStripIcon'
 import useDebounce from '@/hooks/useDebounce'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
-import ColorPicker, { HueSlider } from 'reanimated-color-picker'
 import { Slider } from '@react-native-assets/slider'
-import { SegmentedButtons, TouchableRipple } from 'react-native-paper'
+import { SegmentedButtons, TouchableRipple, Text } from 'react-native-paper'
+import CustomColorPicker from '@/components/CustomColorPicker/CustomColorPicker'
 
 function SmartLed({ device }) {
   const { theme } = useTheme()
@@ -27,6 +26,7 @@ function SmartLed({ device }) {
   const debouncedPeletteSpeed = useDebounce(paletteSpeed, 300)
   const [paletteItems, setPaletteItems] = useState([])
   const [ledIcon, setLedIcon] = useState(<></>)
+  const [pickerVisibility, setPickerVisibility] = useState(false)
 
   useEffect(() => {
     if (device.sub_type == 'ledStrip') {
@@ -51,7 +51,7 @@ function SmartLed({ device }) {
     if (device.attributes.led_type?.includes('rgb')) {
       if (device.attributes.color?.substring(0, 6).toUpperCase() === 'FFFFFF') {
         setColor('#ffff00')
-      } else {
+      } else if (device.attributes.color?.substring(0, 6) !== '000000') {
         setColor('#' + device.attributes.color?.substring(0, 6))
       }
     } else {
@@ -180,6 +180,7 @@ function SmartLed({ device }) {
             <View
               style={[
                 styles.sliderItem,
+                { gap: 8 },
                 {
                   display: device.attributes.led_type?.includes('rgb')
                     ? 'flex'
@@ -188,23 +189,21 @@ function SmartLed({ device }) {
               ]}
             >
               <Text style={styles.label}>Color</Text>
-              <ColorPicker
-                sliderThickness={16}
-                thumbSize={25}
-                style={{ width: '100%', paddingHorizontal: 5 }}
-                value={color}
-                onChangeJS={(color) => {
-                  setColor(color.hex)
+              <Pressable
+                style={[styles.pickerButton, { backgroundColor: color }]}
+                onPress={() => setPickerVisibility(true)}
+              ></Pressable>
+              <CustomColorPicker
+                color={color}
+                onChange={(color) => {
+                  sendChangeColor(color.hex?.substring(0, 7), cold, warm)
                 }}
-                onCompleteJS={(color) => {
-                  sendChangeColor(color.hex, cold, warm)
-                }}
-              >
-                <HueSlider />
-              </ColorPicker>
+                visibility={pickerVisibility}
+                setVisibility={setPickerVisibility}
+              />
             </View>
-            <View style={[styles.sliderItem, { gap: 0 }]}>
-              <Text style={styles.label}>Dimmer</Text>
+            <View style={[styles.sliderItem]}>
+              <Text style={styles.label}>Dimmer ({dimmer}%)</Text>
               <Slider
                 style={{ width: '100%' }}
                 trackHeight={5}
@@ -219,6 +218,48 @@ function SmartLed({ device }) {
                 minimumTrackTintColor={theme.active}
                 maximumTrackTintColor={theme.inactive}
               />
+              <View style={styles.sliderButtons}>
+                <TouchableRipple
+                  borderless={true}
+                  onPress={() => {
+                    let newDimmer = dimmer - 5
+                    if (newDimmer < 0) {
+                      newDimmer = 0
+                    }
+                    setDimmer(newDimmer)
+                  }}
+                  rippleColor={theme.ripple}
+                  style={styles.sliderButton}
+                >
+                  <Text style={styles.sliderButtonText}>-</Text>
+                </TouchableRipple>
+                <TouchableRipple
+                  borderless={true}
+                  onPress={() => {
+                    setDimmer(100)
+                  }}
+                  rippleColor={theme.ripple}
+                  style={[styles.sliderButton, { width: 70 }]}
+                >
+                  <Text style={[styles.sliderButtonText, { fontSize: 14 }]}>
+                    Reset
+                  </Text>
+                </TouchableRipple>
+                <TouchableRipple
+                  borderless={true}
+                  onPress={() => {
+                    let newDimmer = dimmer + 5
+                    if (newDimmer > 100) {
+                      newDimmer = 100
+                    }
+                    setDimmer(newDimmer)
+                  }}
+                  rippleColor={theme.ripple}
+                  style={styles.sliderButton}
+                >
+                  <Text style={styles.sliderButtonText}>+</Text>
+                </TouchableRipple>
+              </View>
             </View>
             <View style={styles.bulbItem}>
               <TouchableRipple
@@ -255,7 +296,7 @@ function SmartLed({ device }) {
                     },
                   ]}
                 >
-                  <Text style={styles.label}>Cold</Text>
+                  <Text style={styles.label}>Cold ({~~(cold * 100)}%)</Text>
                   <Slider
                     style={{ width: '100%' }}
                     trackHeight={20}
@@ -273,6 +314,51 @@ function SmartLed({ device }) {
                     minimumTrackTintColor={'royalblue'}
                     maximumTrackTintColor={theme.inactive}
                   />
+                  <View style={styles.sliderButtons}>
+                    <TouchableRipple
+                      borderless={true}
+                      onPress={() => {
+                        let newCold = cold - 0.05
+                        if (newCold < 0) {
+                          newCold = 0
+                        }
+                        setCold(newCold)
+                        sendChangeColor(color, newCold, warm)
+                      }}
+                      rippleColor={theme.ripple}
+                      style={styles.sliderButton}
+                    >
+                      <Text style={styles.sliderButtonText}>-</Text>
+                    </TouchableRipple>
+                    <TouchableRipple
+                      borderless={true}
+                      onPress={() => {
+                        setCold(0)
+                        sendChangeColor(color, 0, warm)
+                      }}
+                      rippleColor={theme.ripple}
+                      style={[styles.sliderButton, { width: 70 }]}
+                    >
+                      <Text style={[styles.sliderButtonText, { fontSize: 14 }]}>
+                        Reset
+                      </Text>
+                    </TouchableRipple>
+                    <TouchableRipple
+                      borderless={true}
+                      onPress={() => {
+                        let newCold = cold + 0.05
+                        if (newCold > 1) {
+                          newCold = 1
+                        }
+                        setCold(newCold)
+                        sendChangeColor(color, newCold, warm)
+                      }}
+                      rippleColor={theme.ripple}
+                      style={styles.sliderButton}
+                    >
+                      <Text style={styles.sliderButtonText}>+</Text>
+                    </TouchableRipple>
+                  </View>
                 </View>
                 <View
                   style={[
@@ -284,7 +370,7 @@ function SmartLed({ device }) {
                     },
                   ]}
                 >
-                  <Text style={styles.label}>Warm</Text>
+                  <Text style={styles.label}>Warm ({~~(warm * 100)}%)</Text>
                   <Slider
                     style={{ width: '100%' }}
                     trackHeight={20}
@@ -302,6 +388,51 @@ function SmartLed({ device }) {
                     minimumTrackTintColor={'gold'}
                     maximumTrackTintColor={theme.inactive}
                   />
+                  <View style={styles.sliderButtons}>
+                    <TouchableRipple
+                      borderless={true}
+                      onPress={() => {
+                        let newWarm = warm - 0.05
+                        if (newWarm < 0) {
+                          newWarm = 0
+                        }
+                        setWarm(newWarm)
+                        sendChangeColor(color, cold, newWarm)
+                      }}
+                      rippleColor={theme.ripple}
+                      style={styles.sliderButton}
+                    >
+                      <Text style={styles.sliderButtonText}>-</Text>
+                    </TouchableRipple>
+                    <TouchableRipple
+                      borderless={true}
+                      onPress={() => {
+                        setWarm(0)
+                        sendChangeColor(color, cold, 0)
+                      }}
+                      rippleColor={theme.ripple}
+                      style={[styles.sliderButton, { width: 70 }]}
+                    >
+                      <Text style={[styles.sliderButtonText, { fontSize: 14 }]}>
+                        Reset
+                      </Text>
+                    </TouchableRipple>
+                    <TouchableRipple
+                      borderless={true}
+                      onPress={() => {
+                        let newWarm = warm + 0.05
+                        if (newWarm >= 1) {
+                          newWarm = 1
+                        }
+                        setWarm(newWarm)
+                        sendChangeColor(color, cold, newWarm)
+                      }}
+                      rippleColor={theme.ripple}
+                      style={styles.sliderButton}
+                    >
+                      <Text style={styles.sliderButtonText}>+</Text>
+                    </TouchableRipple>
+                  </View>
                 </View>
               </>
             ) : (
@@ -330,8 +461,10 @@ function SmartLed({ device }) {
                 <View
                   style={[styles.paletteControlItem, styles.paletteButtons]}
                 >
-                  <Pressable
-                    style={styles.palettePlayBtn}
+                  <TouchableRipple
+                    borderless={true}
+                    rippleColor={theme.ripple}
+                    style={styles.paletteButton}
                     onPress={() => {
                       if (
                         device.attributes.scheme == '1' ||
@@ -347,13 +480,15 @@ function SmartLed({ device }) {
                       color={
                         device.attributes.scheme == '1' ||
                         device.attributes.scheme == '0'
-                          ? 'green'
+                          ? theme.safe
                           : theme.inactive
                       }
                     />
-                  </Pressable>
-                  <Pressable
-                    style={styles.paletteStopBtn}
+                  </TouchableRipple>
+                  <TouchableRipple
+                    borderless={true}
+                    rippleColor={theme.ripple}
+                    style={styles.paletteButton}
                     onPress={() => {
                       if (
                         device.attributes.scheme == '2' ||
@@ -373,10 +508,12 @@ function SmartLed({ device }) {
                           : theme.inactive
                       }
                     />
-                  </Pressable>
+                  </TouchableRipple>
                 </View>
                 <View style={[styles.paletteControlItem]}>
-                  <Text style={styles.label}>Speed</Text>
+                  <Text style={styles.label}>
+                    Speed ({~~(((41 - paletteSpeed) * 100) / 40)}%)
+                  </Text>
                   <View
                     style={{
                       width: '100%',
@@ -396,6 +533,50 @@ function SmartLed({ device }) {
                       minimumTrackTintColor={theme.active}
                       maximumTrackTintColor={theme.inactive}
                     />
+                    <View style={styles.sliderButtons}>
+                      <TouchableRipple
+                        borderless={true}
+                        onPress={() => {
+                          let newSpeed = paletteSpeed + 1
+                          if (newSpeed > 40) {
+                            newSpeed = 40
+                          }
+                          setPaletteSpeed(newSpeed)
+                        }}
+                        rippleColor={theme.ripple}
+                        style={styles.sliderButton}
+                      >
+                        <Text style={styles.sliderButtonText}>-</Text>
+                      </TouchableRipple>
+                      <TouchableRipple
+                        borderless={true}
+                        onPress={() => {
+                          setPaletteSpeed(8)
+                        }}
+                        rippleColor={theme.ripple}
+                        style={[styles.sliderButton, { width: 70 }]}
+                      >
+                        <Text
+                          style={[styles.sliderButtonText, { fontSize: 14 }]}
+                        >
+                          Reset
+                        </Text>
+                      </TouchableRipple>
+                      <TouchableRipple
+                        borderless={true}
+                        onPress={() => {
+                          let newSpeed = paletteSpeed - 1
+                          if (newSpeed < 1) {
+                            newSpeed = 1
+                          }
+                          setPaletteSpeed(newSpeed)
+                        }}
+                        rippleColor={theme.ripple}
+                        style={styles.sliderButton}
+                      >
+                        <Text style={styles.sliderButtonText}>+</Text>
+                      </TouchableRipple>
+                    </View>
                   </View>
                 </View>
               </View>
@@ -451,6 +632,7 @@ function UnsupportedSmartLedOption({ additionalMessage, textColor }) {
         alignItems: 'center',
         justifyContent: 'center',
         gap: 10,
+        height: '100%',
       }}
     >
       <Ionicons name='warning-outline' size={50} color='gold' />
@@ -465,6 +647,13 @@ export default SmartLed
 
 const createStyleSheet = (theme) => {
   return StyleSheet.create({
+    pickerButton: {
+      width: '100%',
+      height: 20,
+      borderRadius: 4,
+      borderWidth: 1,
+      borderColor: theme.inactive,
+    },
     text: {
       color: theme.text,
     },
@@ -480,7 +669,7 @@ const createStyleSheet = (theme) => {
     },
     customTabContent: {
       width: '100%',
-      height: 200,
+      height: 210,
       flexDirection: 'row',
       alignItems: 'center',
     },
@@ -488,13 +677,33 @@ const createStyleSheet = (theme) => {
       width: '100%',
       height: '100%',
       alignItems: 'center',
-      justifyContent: 'space-around',
+      justifyContent: 'space-between',
     },
     coldWarmTab: {
       paddingHorizontal: 10,
+      justifyContent: 'space-around',
     },
     sliderItem: {
       width: '100%',
+    },
+    sliderButtons: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    sliderButton: {
+      borderWidth: 1,
+      borderRadius: 20,
+      width: 50,
+      height: 30,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderColor: theme.active,
+    },
+    sliderButtonText: {
+      color: theme.active,
+      fontSize: 18,
     },
     tabs: {
       marginTop: 10,
@@ -505,9 +714,12 @@ const createStyleSheet = (theme) => {
       backgroundColor: theme.background,
     },
     bulbItem: {
-      width: '100%',
+      // width: '100%',
       justifyContent: 'center',
       alignItems: 'center',
+      borderWidth: 1,
+      borderColor: theme.inactive,
+      borderRadius: '50%',
     },
     bulbItemIcon: {
       alignItems: 'center',
@@ -535,8 +747,12 @@ const createStyleSheet = (theme) => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      marginTop: 25,
-      gap: 10,
+      marginTop: 15,
+      gap: 5,
+    },
+    paletteButton: {
+      padding: 5,
+      borderRadius: '50%',
     },
   })
 }

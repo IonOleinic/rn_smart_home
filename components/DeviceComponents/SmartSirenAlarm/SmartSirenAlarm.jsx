@@ -70,7 +70,7 @@ function SmartSirenAlarm({ device }) {
 
   const sendChangePower = async (powerStatus) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `/smartSirenAlarm/power?status=${powerStatus}&device_id=${device.id}`
       )
     } catch (error) {
@@ -80,7 +80,7 @@ function SmartSirenAlarm({ device }) {
 
   const updateAlarmOptions = async (newRingtone, newVolume, newDuration) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `/smartSirenAlarm/options?new_sound=${newRingtone}&new_volume=${newVolume}&new_duration=${newDuration}&device_id=${device.id}`
       )
     } catch (error) {
@@ -155,14 +155,14 @@ function SmartSirenAlarm({ device }) {
           />
         </View>
         <TouchableRipple
+          borderless={true}
           rippleColor={
             status == 'ON' ? theme.ripplePwrBtnOff : theme.ripplePwrBtnOn
           }
-          borderless={true}
-          style={{ borderRadius: '50%' }}
+          style={[styles.sirenBtn, status == 'ON' && styles.sirenActive]}
           onPress={() => sendChangePower('TOGGLE')}
         >
-          <View style={[styles.sirenBtn, status == 'ON' && styles.sirenActive]}>
+          <>
             <SimpleLineIcons
               name={status == 'ON' ? 'volume-2' : 'volume-off'}
               size={40}
@@ -177,7 +177,7 @@ function SmartSirenAlarm({ device }) {
             >
               Tap To Toggle
             </Text>
-          </View>
+          </>
         </TouchableRipple>
         <View style={styles.sirenOption}>
           <Text style={styles.label}>{'Duration (s)'}</Text>
@@ -334,9 +334,9 @@ const createStyleSheet = (theme) => {
       justifyContent: 'center',
     },
     sirenBtn: {
-      width: 110,
-      height: 110,
-      padding: 12,
+      width: 115,
+      height: 115,
+      padding: 10,
       alignItems: 'center',
       justifyContent: 'center',
       borderWidth: 2,
@@ -346,9 +346,8 @@ const createStyleSheet = (theme) => {
     },
     sirenBtnInfo: {
       borderTopWidth: 2,
-      fontSize: 12,
       color: theme.text,
-      paddingTop: 6,
+      paddingTop: 4,
       marginTop: 8,
       fontSize: 12,
       textAlign: 'center',

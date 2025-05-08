@@ -1,24 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
-import { Modal, Button, Portal } from 'react-native-paper'
-import ColorPicker, {
-  Panel1,
-  Swatches,
-  Preview,
-  HueSlider,
-} from 'reanimated-color-picker'
 import Feather from '@expo/vector-icons/Feather'
 import useTheme from '@/hooks/useTheme'
+import CustomColorPicker from '@/components/CustomColorPicker/CustomColorPicker'
 
 function PaletteItem({ initColor, handlePaletteChange, id }) {
   const { theme } = useTheme()
   const styles = createStyleSheet(theme)
   const [isClear, setIsClear] = useState(true)
-  const [modalVisible, setModalVisible] = useState(false)
-  const showModal = () => setModalVisible(true)
-  const hideModal = () => setModalVisible(false)
-
   const [color, setColor] = useState('#' + initColor)
+  const [pickerVisibility, setPickerVisibility] = useState(false)
 
   useEffect(() => {
     if (initColor) {
@@ -35,7 +26,7 @@ function PaletteItem({ initColor, handlePaletteChange, id }) {
       <Pressable
         style={styles.paletteBox}
         onPress={() => {
-          showModal()
+          setPickerVisibility(true)
         }}
       >
         <View style={[styles.paletteBoxAdd]}>
@@ -49,54 +40,19 @@ function PaletteItem({ initColor, handlePaletteChange, id }) {
           ]}
         />
       </Pressable>
-      <Portal>
-        <Modal
-          visible={modalVisible}
-          onDismiss={hideModal}
-          contentContainerStyle={styles.modal}
-        >
-          <ColorPicker
-            style={[styles.colorPicker]}
-            value={color}
-            onCompleteJS={(color) => {
-              setIsClear(false)
-              setColor(color.hex)
-            }}
-          >
-            <Preview />
-            <Panel1 />
-            <HueSlider />
-            <Swatches />
-          </ColorPicker>
-          <View style={styles.buttons}>
-            <Button
-              mode='contained'
-              labelStyle={{ color: 'white' }}
-              buttonColor={theme.active}
-              style={styles.button}
-              onPress={() => {
-                handlePaletteChange(id, color)
-                hideModal()
-              }}
-            >
-              Ok
-            </Button>
-            <Button
-              mode='contained'
-              labelStyle={{ color: 'white' }}
-              buttonColor={theme.active}
-              style={[styles.button, { backgroundColor: theme.danger }]}
-              onPress={() => {
-                setIsClear(true)
-                handlePaletteChange(id, '')
-                hideModal()
-              }}
-            >
-              Clear
-            </Button>
-          </View>
-        </Modal>
-      </Portal>
+      <CustomColorPicker
+        color={color}
+        onChange={(color) => {
+          setColor(color.hex?.substring(0, 7))
+        }}
+        visibility={pickerVisibility}
+        setVisibility={setPickerVisibility}
+        onFinish={() => handlePaletteChange(id, color)}
+        onClear={() => {
+          setIsClear(true)
+          handlePaletteChange(id, '')
+        }}
+      />
     </View>
   )
 }
@@ -105,27 +61,6 @@ export default PaletteItem
 
 const createStyleSheet = (theme) => {
   return StyleSheet.create({
-    modal: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    },
-    colorPicker: {
-      width: '70%',
-      gap: 30,
-    },
-    buttons: {
-      width: '60%',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      marginTop: 100,
-    },
-    button: {
-      width: 100,
-      borderRadius: 10,
-    },
     paletteColoritem: {
       position: 'relative',
       flexDirection: 'row',

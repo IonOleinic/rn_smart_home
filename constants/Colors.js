@@ -54,6 +54,7 @@ const veryDarkGrey = 'rgb(55, 55, 55)'
 /*========== default colors ============*/
 const active = indigo
 const danger = red
+const safe = green
 const inactiveLight = mediumGrey
 const inactiveDark = darkGrey
 const pressed = pressedIndigo
@@ -99,6 +100,7 @@ export const Colors = {
     active: active,
     inactive: inactiveLight,
     danger: danger,
+    safe: safe,
     link: link,
     linkPressed: linkPressed,
     error: error,
@@ -131,6 +133,7 @@ export const Colors = {
     active: active,
     inactive: inactiveDark,
     danger: danger,
+    safe: safe,
     link: link,
     error: error,
     errorBck: errorBckDark,

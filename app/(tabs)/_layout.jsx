@@ -45,7 +45,17 @@ const TabsLayout = () => {
           name='index'
           options={{
             title: 'Dasboard',
-            headerShown: false,
+            headerShown: true,
+            header: ({ navigation }) => {
+              return (
+                <CustomHeader
+                  navigation={navigation}
+                  title='Dashboard'
+                  hideBackIcon={true}
+                  titlePosition='center'
+                />
+              )
+            },
             tabBarIcon: ({ focused }) => (
               <TabBarIcon
                 focused={focused}
@@ -99,7 +109,14 @@ const TabsLayout = () => {
             title: 'Add menu',
             headerShown: true,
             header: ({ navigation }) => {
-              return <CustomHeader navigation={navigation} title='Add Menu' />
+              return (
+                <CustomHeader
+                  navigation={navigation}
+                  title='Add Menu'
+                  hideBackIcon={true}
+                  titlePosition='center'
+                />
+              )
             },
             tabBarIcon: ({ focused }) => (
               <TabBarIcon
@@ -154,7 +171,14 @@ const TabsLayout = () => {
             title: 'Profile',
             headerShown: true,
             header: ({ navigation }) => {
-              return <CustomHeader navigation={navigation} title='Profile' />
+              return (
+                <CustomHeader
+                  navigation={navigation}
+                  title='Profile'
+                  hideBackIcon={true}
+                  titlePosition='center'
+                />
+              )
             },
             tabBarIcon: ({ focused }) => (
               <TabBarIcon

@@ -186,7 +186,10 @@ const Device = ({ initDevice }) => {
           <View style={styles.deviceAvailable}>
             {availableIcon}
             <Text
-              style={{ color: device.available ? 'green' : theme.inactive }}
+              style={{
+                color: device.available ? theme.safe : theme.inactive,
+                marginBottom: 3,
+              }}
             >
               {device.available ? 'online' : 'offline'}
             </Text>

@@ -181,6 +181,8 @@ const createStyleSheet = (theme) => {
       width: 190,
       height: 50,
       gap: 8,
+      marginTop: -5,
+      marginBottom: 5,
     },
     energyTodayText: {
       fontSize: 40,
