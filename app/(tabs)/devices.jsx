@@ -5,13 +5,11 @@ import useTheme from '@/hooks/useTheme'
 import { useFocusEffect } from 'expo-router'
 import Animated, { LinearTransition } from 'react-native-reanimated'
 import Device from '@/components/DeviceComponents/Device'
-import { useHeaderHeight } from '@react-navigation/elements'
 import TabBarSafeAreaWrapper from '@/components/TabBar/TabBarSafeAreaWrapper'
 
 const Devices = () => {
   const { colorScheme, theme } = useTheme()
   const styles = createStyleSheet(theme)
-  const headerHeight = useHeaderHeight()
   const [devices, setDevices] = useState([])
   const axios = useAxiosPrivate()
   const [loading, setLoading] = useState(true)
@@ -41,7 +39,6 @@ const Devices = () => {
   // )
   useEffect(() => {
     getDevices()
-    console.log(headerHeight)
   }, [])
 
   return (

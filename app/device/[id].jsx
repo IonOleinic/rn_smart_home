@@ -1,20 +1,17 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import useTheme from '@/hooks/useTheme'
-import RequireAuth from '@/components/Auth/RequireAuth'
 
 const DeviceDetails = () => {
   const { id } = useLocalSearchParams()
   const { theme } = useTheme()
   const styles = createStyleSheet(theme)
   return (
-    <RequireAuth>
-      <View style={styles.pageContainer}>
-        <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
-          Device Details {id}
-        </Text>
-      </View>
-    </RequireAuth>
+    <View style={styles.pageContainer}>
+      <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
+        Device Details {id}
+      </Text>
+    </View>
   )
 }
 

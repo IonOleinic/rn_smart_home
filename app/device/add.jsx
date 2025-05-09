@@ -1,21 +1,18 @@
 import { StyleSheet, Text, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import useTheme from '@/hooks/useTheme'
-import RequireAuth from '@/components/Auth/RequireAuth'
 
 const AddDevice = () => {
   const { theme } = useTheme()
   const styles = createStyleSheet(theme)
   return (
-    <RequireAuth>
-      <View style={styles.pageContainer}>
-        <Animated.View entering={FadeInDown.duration(400).delay(300)}>
-          <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
-            Add New Device
-          </Text>
-        </Animated.View>
-      </View>
-    </RequireAuth>
+    <View style={styles.pageContainer}>
+      <Animated.View entering={FadeInDown.duration(400).delay(300)}>
+        <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
+          Add New Device
+        </Text>
+      </Animated.View>
+    </View>
   )
 }
 

@@ -26,7 +26,6 @@ const TabsLayout = () => {
             bottom: 0,
             height: 64,
             paddingHorizontal: 10,
-            paddingVertical: 10,
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: theme.background,
@@ -34,7 +33,7 @@ const TabsLayout = () => {
           },
           tabBarItemStyle: {
             width: '100%',
-            height: '100%',
+            height: 64,
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'row',
