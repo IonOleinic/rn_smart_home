@@ -5,6 +5,7 @@ import SmartDoorSensor from '@/components/DeviceComponents/SmartDoorSensor/Smart
 import SmartSwitch from '@/components/DeviceComponents/SmartSwitch/SmartSwitch'
 import SmartSirenAlarm from '@/components/DeviceComponents/SmartSirenAlarm/SmartSirenAlarm'
 import SmartLed from '@/components/DeviceComponents/SmartLed/SmartLed'
+import SmartIR from '@/components/DeviceComponents/SmartIR/SmartIR'
 
 function useFinalDevice(device) {
   const [finalDevice, setFinalDevice] = useState(<></>)
@@ -15,7 +16,7 @@ function useFinalDevice(device) {
         if (device.device_type === 'smartStrip') {
           setFinalDevice(<SmartSwitch device={device} />)
         } else if (device.device_type === 'smartIR') {
-          setFinalDevice(<></>)
+          setFinalDevice(<SmartIR device={device} />)
         } else if (device.device_type === 'smartTempSensor') {
           setFinalDevice(<SmartTempSensor device={device} />)
         } else if (device.device_type === 'smartDoorSensor') {

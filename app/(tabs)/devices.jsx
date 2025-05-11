@@ -6,6 +6,7 @@ import { useFocusEffect } from 'expo-router'
 import Animated, { LinearTransition } from 'react-native-reanimated'
 import Device from '@/components/DeviceComponents/Device'
 import TabBarSafeAreaWrapper from '@/components/TabBar/TabBarSafeAreaWrapper'
+import LoadingScreen from '@/components/Layers/LoadingScreen'
 
 const Devices = () => {
   const { colorScheme, theme } = useTheme()
@@ -22,6 +23,7 @@ const Devices = () => {
   const [selectedOrder, setSelectedOrder] = useState({ name: 'Date' })
 
   const getDevices = async (usedFilter = filter, usedOrder = selectedOrder) => {
+    setLoading(true)
     try {
       const response = await axios.get(
         `/devices?filter=${JSON.stringify(usedFilter)}&order=${usedOrder?.name}`
@@ -30,6 +32,8 @@ const Devices = () => {
       console.log('getDevices success')
     } catch (error) {
       console.log(error)
+    } finally {
+      setLoading(false)
     }
   }
   // useFocusEffect(
@@ -41,7 +45,9 @@ const Devices = () => {
     getDevices()
   }, [])
 
-  return (
+  return loading ? (
+    <LoadingScreen />
+  ) : (
     <TabBarSafeAreaWrapper>
       <View
         style={[
