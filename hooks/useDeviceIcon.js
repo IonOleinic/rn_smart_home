@@ -91,7 +91,7 @@ const useDeviceIcon = (device) => {
     const { device_type, sub_type, attributes } = device
 
     switch (device_type) {
-      case 'smartStrip':
+      case 'smartSwitch':
         if (sub_type === 'plug') {
           return attributes?.nr_of_sockets === 1 ? (
             <SmartPlugIcon

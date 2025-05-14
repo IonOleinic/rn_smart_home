@@ -1,13 +1,19 @@
-import { Pressable, StyleSheet, View } from 'react-native'
+import { Image, Pressable, StyleSheet, View } from 'react-native'
 import { useEffect, useState } from 'react'
 import useTheme from '@/hooks/useTheme'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import useDeviceIcon from '@/hooks/useDeviceIcon'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { socket } from '@/api/io'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import useFinalDevice from '@/hooks/useFinalDevice'
 import InactiveLayer from '../Layers/InactiveLayer'
+import tasmotaLogoPng from './ManufacterImages/tasmota-logo-blue.png'
+import openBekenLogoPng from './ManufacterImages/openBeken-logo.png'
+import wifiLogo from './ConnectionTypeImages/wifi-logo.png'
+import zigbeeLogo from './ConnectionTypeImages/zigbee-logo.png'
+import bluetoothLogo from './ConnectionTypeImages/bluetooth-logo.png'
 import {
   Menu,
   TouchableRipple,
@@ -70,8 +76,16 @@ const Device = ({ initDevice }) => {
       }
     }
   }, [])
+
   return (
-    <Surface style={styles.device} elevation={2}>
+    <Surface
+      key={device.id}
+      style={[
+        styles.device,
+        { borderColor: device.manufacter === 'tasmota' ? 'skyblue' : 'orange' },
+      ]}
+      elevation={2}
+    >
       <View style={styles.deviceTop}>
         <Pressable
           style={visibility ? { transform: [{ rotate: '180deg' }] } : {}}
@@ -204,6 +218,23 @@ const Device = ({ initDevice }) => {
             {batteryIcon}
           </View>
         </View>
+        <View style={styles.deviceRightIcons}>
+          <Image
+            source={device.connection_type === 'wifi' ? wifiLogo : zigbeeLogo}
+            style={{
+              width: device.connection_type === 'wifi' ? 30 : 20,
+              height: 20,
+            }}
+          />
+          <Image
+            source={
+              device.manufacter === 'tasmota'
+                ? tasmotaLogoPng
+                : openBekenLogoPng
+            }
+            style={{ width: 20, height: 20 }}
+          />
+        </View>
       </View>
       <View
         style={
@@ -273,6 +304,7 @@ const createStyleSheet = (theme) => {
       backgroundColor: theme.background,
       padding: 8,
       borderRadius: 8,
+      borderWidth: 1,
     },
     deviceTop: {
       flexDirection: 'row',
@@ -289,6 +321,23 @@ const createStyleSheet = (theme) => {
       width: 130,
       height: '100%',
       justifyContent: 'space-between',
+    },
+    deviceRightIcons: {
+      position: 'absolute',
+      right: 8,
+      bottom: 0,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+    deviceDetailsBtn: {
+      width: 20,
+      height: 20,
+      borderRadius: 3,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 1.5,
+      borderColor: theme.text,
     },
     deviceName: {
       color: theme.text,
