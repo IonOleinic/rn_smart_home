@@ -7,6 +7,7 @@ import Animated, { LinearTransition } from 'react-native-reanimated'
 import Device from '@/components/DeviceComponents/Device'
 import TabBarSafeAreaWrapper from '@/components/TabBar/TabBarSafeAreaWrapper'
 import LoadingScreen from '@/components/Layers/LoadingScreen'
+import DeletedDevices from '@/components/DeviceComponents/DeletedDevices/DeletedDevices'
 
 const Devices = () => {
   const { colorScheme, theme } = useTheme()
@@ -45,6 +46,15 @@ const Devices = () => {
     getDevices()
   }, [])
 
+  const handleDeleteDevice = async (deviceId) => {
+    try {
+      await axios.delete(`/device/${deviceId}`)
+      getDevices()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
   return loading ? (
     <LoadingScreen />
   ) : (
@@ -69,12 +79,15 @@ const Devices = () => {
         <Animated.FlatList
           data={devices}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <Device initDevice={item} />}
+          renderItem={({ item }) => (
+            <Device initDevice={item} handleDeleteDevice={handleDeleteDevice} />
+          )}
           contentContainerStyle={styles.devices}
           itemLayoutAnimation={LinearTransition}
           keyboardDismissMode='on-drag'
         />
       </View>
+      <DeletedDevices devices={devices} refreshDevices={getDevices} />
     </TabBarSafeAreaWrapper>
   )
 }

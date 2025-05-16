@@ -11,7 +11,7 @@ export default function SmartSwitchIcon(props) {
       preserveAspectRatio='xMidYMid meet'
       fill={props.color || 'currentColor'}
       stroke='none'
-      className={props.className}
+      style={props.style}
     >
       <G transform='translate(0,450) scale(0.1,-0.1)'>
         <Path

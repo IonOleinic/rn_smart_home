@@ -6,6 +6,7 @@ import { PaperProvider } from 'react-native-paper'
 import CustomHeader from '@/components/CustomHeader/CustomHeader'
 import SafeAreaWrapper from '@/components/SafeArea/SafeAreaWrapper'
 import useAuth from '@/hooks/useAuth'
+import { ConfirmDialogProvider } from '@/context/ConfirmDialogProvider'
 export default function RootLayout() {
   return (
     <AuthProvider>
@@ -13,7 +14,9 @@ export default function RootLayout() {
         <PaperProvider>
           <SafeAreaProvider>
             <SafeAreaWrapper>
-              <StackScreens />
+              <ConfirmDialogProvider>
+                <StackScreens />
+              </ConfirmDialogProvider>
             </SafeAreaWrapper>
           </SafeAreaProvider>
         </PaperProvider>

@@ -2,46 +2,31 @@ import { Image, Pressable, StyleSheet, View } from 'react-native'
 import { useEffect, useState } from 'react'
 import useTheme from '@/hooks/useTheme'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import useDeviceIcon from '@/hooks/useDeviceIcon'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { socket } from '@/api/io'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import useFinalDevice from '@/hooks/useFinalDevice'
 import InactiveLayer from '../Layers/InactiveLayer'
-import tasmotaLogoPng from './ManufacterImages/tasmota-logo-blue.png'
-import openBekenLogoPng from './ManufacterImages/openBeken-logo.png'
 import wifiLogo from './ConnectionTypeImages/wifi-logo.png'
 import zigbeeLogo from './ConnectionTypeImages/zigbee-logo.png'
-import bluetoothLogo from './ConnectionTypeImages/bluetooth-logo.png'
-import {
-  Menu,
-  TouchableRipple,
-  Surface,
-  Text,
-  Portal,
-  Dialog,
-  Button,
-  Icon,
-} from 'react-native-paper'
+import { Menu, TouchableRipple, Surface, Text } from 'react-native-paper'
+import useConfirmDialog from '@/hooks/useConfirmDialog'
 
-const Device = ({ initDevice }) => {
+const Device = ({ handleDeleteDevice, initDevice }) => {
+  const { confirmDialog } = useConfirmDialog()
   const axios = useAxiosPrivate()
   const { theme } = useTheme()
   const [visibility, setVisibility] = useState(false)
   const [device, setDevice] = useState(initDevice)
   const styles = createStyleSheet(theme)
-  const { deviceIcon, batteryIcon, availableIcon, favBool, favIcon } =
+  const { getDeviceIcon, batteryIcon, availableIcon, favBool, favIcon } =
     useDeviceIcon(device)
   const finalDevice = useFinalDevice(device)
 
   const [menuVisible, setMenuVisible] = useState(false)
   const openMenu = () => setMenuVisible(true)
   const closeMenu = () => setMenuVisible(false)
-
-  const [dialogVisible, setDialogVisible] = useState(false)
-  const showDialog = () => setDialogVisible(true)
-  const hideDialog = () => setDialogVisible(false)
 
   const updateDevice = async () => {
     try {
@@ -82,7 +67,10 @@ const Device = ({ initDevice }) => {
       key={device.id}
       style={[
         styles.device,
-        { borderColor: device.manufacter === 'tasmota' ? 'skyblue' : 'orange' },
+        {
+          borderColor:
+            device.connection_type === 'wifi' ? theme.wifi : theme.zigbee,
+        },
       ]}
       elevation={2}
     >
@@ -97,7 +85,7 @@ const Device = ({ initDevice }) => {
           onPress={() => setVisibility((prev) => !prev)}
           style={styles.deviceIcon}
         >
-          {deviceIcon}
+          {getDeviceIcon({ size: 75 })}
         </Pressable>
         <Pressable
           onPress={() => setVisibility((prev) => !prev)}
@@ -182,7 +170,16 @@ const Device = ({ initDevice }) => {
             <Menu.Item
               leadingIcon='trash-can-outline'
               onPress={() => {
-                showDialog()
+                confirmDialog({
+                  header: 'Delete confirmation',
+                  message: `Do you want to move to trash device ${device.name}?`,
+                  icon: 'trash-can-outline',
+                  onAccept: () => {
+                    handleDeleteDevice(device.id)
+                  },
+                  acceptIsDanger: true,
+                })
+
                 closeMenu()
               }}
               title='Delete'
@@ -226,14 +223,6 @@ const Device = ({ initDevice }) => {
               height: 20,
             }}
           />
-          <Image
-            source={
-              device.manufacter === 'tasmota'
-                ? tasmotaLogoPng
-                : openBekenLogoPng
-            }
-            style={{ width: 20, height: 20 }}
-          />
         </View>
       </View>
       <View
@@ -245,50 +234,6 @@ const Device = ({ initDevice }) => {
       >
         {finalDevice}
         <InactiveLayer visibility={!device.available} />
-        <Portal>
-          <Dialog
-            visible={dialogVisible}
-            onDismiss={hideDialog}
-            style={{ borderRadius: 12 }}
-          >
-            <Dialog.Title>
-              <Text>Delete confirmation</Text>
-            </Dialog.Title>
-            <Dialog.Content>
-              <View
-                style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}
-              >
-                <Icon source='trash-can-outline' size={30} />
-                <Text variant='bodyMedium'>
-                  Do you want to move to trash device {device.name}?
-                </Text>
-              </View>
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button
-                mode='outlined'
-                textColor={theme.active}
-                style={[styles.dialogButton, { borderColor: theme.active }]}
-                onPress={() => {
-                  hideDialog()
-                }}
-              >
-                No
-              </Button>
-              <Button
-                mode='outlined'
-                textColor={'white'}
-                style={[styles.dialogButton, { borderColor: theme.error }]}
-                buttonColor={theme.error}
-                onPress={() => {
-                  hideDialog()
-                }}
-              >
-                Yes
-              </Button>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
       </View>
     </Surface>
   )
@@ -324,7 +269,7 @@ const createStyleSheet = (theme) => {
     },
     deviceRightIcons: {
       position: 'absolute',
-      right: 8,
+      right: 5,
       bottom: 0,
       flexDirection: 'row',
       alignItems: 'center',
@@ -395,16 +340,10 @@ const createStyleSheet = (theme) => {
       gap: 5,
     },
     deviceBattery: {
-      marginTop: 2,
       transform: [{ rotate: '90deg' }],
     },
     deviceBatteryHidden: {
       display: 'none',
-    },
-    dialogButton: {
-      marginHorizontal: 15,
-      borderRadius: 6,
-      width: 50,
     },
   })
 }

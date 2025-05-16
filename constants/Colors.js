@@ -90,6 +90,11 @@ const rippleActiveLight = indigoTranLight
 const rippleInactiveLight = rippleLight
 const rippleActiveDark = indigoTranDark
 const rippleInactiveDark = rippleDark
+const rippleDangerLight = redTranLight
+const rippleDangerDark = redTranDark
+const wifi = 'rgba(20, 20, 250, 0.5)'
+const zigbee = 'rgba(250, 20, 20, 0.5)'
+const bluetooth = 'skyblue'
 
 export const Colors = {
   light: {
@@ -122,8 +127,12 @@ export const Colors = {
     pageBck: pageBckLight,
     inputBorder: inputBorderLight,
     ripple: rippleLight,
-    ripplePwrBtnOn: rippleActiveLight,
-    ripplePwrBtnOff: rippleInactiveLight,
+    rippleActive: rippleActiveLight,
+    rippleInactive: rippleInactiveLight,
+    rippleDanger: rippleDangerLight,
+    wifi: wifi,
+    zigbee: zigbee,
+    bluetooth: bluetooth,
   },
   dark: {
     text: 'white',
@@ -154,7 +163,11 @@ export const Colors = {
     pageBck: pageBckDark,
     inputBorder: inputBorderDark,
     ripple: rippleDark,
-    ripplePwrBtnOn: rippleActiveDark,
-    ripplePwrBtnOff: rippleInactiveDark,
+    rippleActive: rippleActiveDark,
+    rippleInactive: rippleInactiveDark,
+    rippleDanger: rippleDangerLight,
+    wifi: wifi,
+    zigbee: zigbee,
+    bluetooth: bluetooth,
   },
 }

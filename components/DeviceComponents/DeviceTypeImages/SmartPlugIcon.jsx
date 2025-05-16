@@ -12,7 +12,7 @@ export default function SmartPlugIcon(props) {
       preserveAspectRatio='xMidYMid meet'
       fill={props.color || 'currentColor'}
       stroke='none'
-      className={props.className}
+      style={props.style}
     >
       <G transform='translate(0.000000,620.000000) scale(0.100000,-0.100000)'>
         <Path
