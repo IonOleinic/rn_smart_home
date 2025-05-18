@@ -1,10 +1,13 @@
 import { StyleSheet, Text, View, Pressable } from 'react-native'
 import useTheme from '@/hooks/useTheme'
 import { useState } from 'react'
+import Animated, { LinearTransition } from 'react-native-reanimated'
+import NoDataFound from '@/components/NoDataFound/NoDataFound'
 
 const Scenes = () => {
   const { colorScheme, theme } = useTheme()
   const [loading, setLoading] = useState(true)
+  const [scenes, setScenes] = useState([])
   const [toolbarExpanded, setToolbarExpanded] = useState(false)
   const styles = createStyleSheet(theme)
   return (
@@ -26,9 +29,18 @@ const Scenes = () => {
         </Pressable>
       </View>
       <View style={styles.scenes}>
-        <Text style={{ color: theme.text, fontSize: 30, fontWeight: 600 }}>
-          Scenes
-        </Text>
+        {scenes.length > 0 ? (
+          <Animated.FlatList
+            data={scenes}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => <></>}
+            contentContainerStyle={styles.scenes}
+            itemLayoutAnimation={LinearTransition}
+            keyboardDismissMode='on-drag'
+          />
+        ) : (
+          <NoDataFound />
+        )}
       </View>
     </View>
   )

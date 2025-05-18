@@ -14,7 +14,9 @@ const NoDataFound = () => {
       }}
     >
       <NoDataFoundIcon size={150} color={theme.inactive} />
-      <Text style={{ fontSize: 20, color: theme.inactive }}>No Data Found</Text>
+      <Text style={{ fontSize: 20, color: theme.inactive, fontWeight: '600' }}>
+        No Data Found
+      </Text>
     </View>
   )
 }

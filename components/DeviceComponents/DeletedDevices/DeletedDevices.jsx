@@ -134,7 +134,10 @@ function DeletedDevices({ devices, refreshDevices }) {
                 <TouchableRipple
                   rippleColor={theme.rippleDanger}
                   borderless={true}
-                  style={[styles.deletedDevicesToolbarItem]}
+                  style={[
+                    styles.deletedDevicesToolbarItem,
+                    { borderColor: theme.danger },
+                  ]}
                   onPress={() => {
                     confirmDialog({
                       message:
@@ -144,7 +147,7 @@ function DeletedDevices({ devices, refreshDevices }) {
                       header: 'Destroy Confirmation',
                       icon: 'trash-can-outline',
                       onAccept: () => {
-                        // destroyAll()
+                        destroyAll()
                       },
                       acceptIsDanger: true,
                     })
@@ -157,7 +160,9 @@ function DeletedDevices({ devices, refreshDevices }) {
                       size={24}
                       color={theme.danger}
                     />
-                    <Text style={{ fontSize: 18 }}>Destroy all</Text>
+                    <Text style={{ fontSize: 18, color: theme.danger }}>
+                      Destroy all
+                    </Text>
                   </>
                 </TouchableRipple>
               </View>
@@ -176,7 +181,7 @@ function DeletedDevices({ devices, refreshDevices }) {
           </Dialog.Content>
         </Dialog>
       </Portal>
-      <Pressable
+      <TouchableRipple
         rippleColor={theme.ripple}
         borderless={true}
         style={styles.recycleBin}
@@ -185,11 +190,11 @@ function DeletedDevices({ devices, refreshDevices }) {
         }}
       >
         {deletedDevices.length > 0 ? (
-          <FullRecycleBin size={55} color={theme.text} />
+          <FullRecycleBin size={60} color={theme.text} />
         ) : (
-          <EmptyRecycleBin size={55} color={theme.text} />
+          <EmptyRecycleBin size={60} color={theme.text} />
         )}
-      </Pressable>
+      </TouchableRipple>
     </View>
   )
 }
