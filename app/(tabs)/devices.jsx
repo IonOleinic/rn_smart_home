@@ -482,6 +482,7 @@ const Devices = () => {
               <Device
                 initDevice={item}
                 handleDeleteDevice={handleDeleteDevice}
+                refreshDevices={getDevices}
               />
             )}
             contentContainerStyle={styles.devices}

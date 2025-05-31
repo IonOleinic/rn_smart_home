@@ -13,7 +13,7 @@ import zigbeeLogo from './ConnectionTypeImages/zigbee-logo.png'
 import { Menu, TouchableRipple, Surface, Text } from 'react-native-paper'
 import useConfirmDialog from '@/hooks/useConfirmDialog'
 
-const Device = ({ handleDeleteDevice, initDevice }) => {
+const Device = ({ handleDeleteDevice, initDevice, refreshDevices }) => {
   const { confirmDialog } = useConfirmDialog()
   const axios = useAxiosPrivate()
   const { theme } = useTheme()
@@ -22,7 +22,7 @@ const Device = ({ handleDeleteDevice, initDevice }) => {
   const styles = createStyleSheet(theme)
   const { getDeviceIcon, batteryIcon, availableIcon, favBool, favIcon } =
     useDeviceIcon(device)
-  const finalDevice = useFinalDevice(device)
+  const finalDevice = useFinalDevice(device, refreshDevices)
 
   const [menuVisible, setMenuVisible] = useState(false)
   const openMenu = () => setMenuVisible(true)
@@ -179,7 +179,6 @@ const Device = ({ handleDeleteDevice, initDevice }) => {
                   },
                   acceptIsDanger: true,
                 })
-
                 closeMenu()
               }}
               title='Delete'

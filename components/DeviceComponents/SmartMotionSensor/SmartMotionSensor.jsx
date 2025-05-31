@@ -1,22 +1,32 @@
 import { StyleSheet, Text, View } from 'react-native'
 import MotionImage from './MotionSensorImages/MotionImage'
 import NoMotionImage from './MotionSensorImages/NoMotionImage'
+import VibrationImage from './MotionSensorImages/VibrationImage'
+import NoVibrationImage from './MotionSensorImages/NoVibrationImage'
 import useTheme from '@/hooks/useTheme'
 import { useEffect, useState } from 'react'
 
 function SmartMotionSensor({ device }) {
   const { theme } = useTheme()
   const [status, setStatus] = useState('No Motion')
-  const [statusImg, setStatusImg] = useState(
-    <NoMotionImage color={theme.text} size={200} />
-  )
+  const [statusImg, setStatusImg] = useState(<></>)
+  const motionDetectedMessage =
+    device.sub_type === 'pir' ? 'Motion Detected!' : 'Vibration Detected!'
+  const noMotionDetectedMessage =
+    device.sub_type === 'pir' ? 'No Motion' : 'No Vibration'
   const styles = createStyleSheet(theme)
   useEffect(() => {
     setStatus(device.attributes.status)
-    if (device.attributes.status == 'Motion') {
-      setStatusImg(<MotionImage color={theme.text} size={200} />)
+    if (device.attributes.status == 'ON') {
+      if (device.sub_type === 'pir')
+        setStatusImg(<MotionImage color={theme.text} size={200} />)
+      else if (device.sub_type === 'vibration')
+        setStatusImg(<VibrationImage color={theme.text} size={200} />)
     } else {
-      setStatusImg(<NoMotionImage color={theme.text} size={200} />)
+      if (device.sub_type === 'pir')
+        setStatusImg(<NoMotionImage color={theme.text} size={200} />)
+      else if (device.sub_type === 'vibration')
+        setStatusImg(<NoVibrationImage color={theme.text} size={200} />)
     }
   }, [device, theme])
 
@@ -27,10 +37,10 @@ function SmartMotionSensor({ device }) {
         <Text
           style={[
             styles.motionStatusText,
-            { color: status == 'Motion' ? 'red' : theme.text },
+            { color: status == 'ON' ? theme.danger : theme.text },
           ]}
         >
-          {status == 'Motion' ? 'Motion Detected !' : 'No Motion'}
+          {status == 'ON' ? motionDetectedMessage : noMotionDetectedMessage}
         </Text>
       </View>
     </View>

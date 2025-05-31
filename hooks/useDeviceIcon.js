@@ -15,6 +15,8 @@ import SmartWallSwitchIcon from '../components/DeviceComponents/DeviceTypeImages
 import SmartTempSensorIcon from '../components/DeviceComponents/DeviceTypeImages/SmartThermometerIcon'
 import SmartSirenAlarmIcon from '../components/DeviceComponents/DeviceTypeImages/SmartSirenAlarmIcon'
 import SmartValveIcon from '../components/DeviceComponents/DeviceTypeImages/SmartValveIcon'
+import SmartVibrationIcon from '../components/DeviceComponents/DeviceTypeImages/SmartVibrationSensorIcon'
+import ZbHubIcon from '../components/DeviceComponents/DeviceTypeImages/ZbHubIcon'
 
 const useDeviceIcon = (device) => {
   const { theme } = useTheme()
@@ -188,8 +190,28 @@ const useDeviceIcon = (device) => {
           />
         )
       case 'smartMotionSensor':
+        if (device.sub_type === 'pir') {
+          return (
+            <SmartMotionIcon
+              color={
+                props.color || device.available ? theme.text : theme.inactive
+              }
+              size={props.size || 75}
+            />
+          )
+        } else if (device.sub_type === 'vibration') {
+          return (
+            <SmartVibrationIcon
+              color={
+                props.color || device.available ? theme.text : theme.inactive
+              }
+              size={props.size || 75}
+            />
+          )
+        }
+      case 'zbHub':
         return (
-          <SmartMotionIcon
+          <ZbHubIcon
             color={
               props.color || device.available ? theme.text : theme.inactive
             }
