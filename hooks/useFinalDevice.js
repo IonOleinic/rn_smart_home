@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import SmartTempSensor from '@/components/DeviceComponents/SmartTempSensor/SmartTempSensor'
-import SmartMotionSensor from '@/components/DeviceComponents/SmartMotionSensor/SmartMotionSensor'
-import SmartDoorSensor from '@/components/DeviceComponents/SmartDoorSensor/SmartDoorSensor'
-import SmartSwitch from '@/components/DeviceComponents/SmartSwitch/SmartSwitch'
-import SmartSirenAlarm from '@/components/DeviceComponents/SmartSirenAlarm/SmartSirenAlarm'
-import SmartLed from '@/components/DeviceComponents/SmartLed/SmartLed'
-import SmartIR from '@/components/DeviceComponents/SmartIR/SmartIR'
-import ZbHub from '@/components/DeviceComponents/zbHub/zbHub'
+import SmartTempSensor from '@/components/DeviceComponents/Device/SmartTempSensor/SmartTempSensor'
+import SmartMotionSensor from '@/components/DeviceComponents/Device/SmartMotionSensor/SmartMotionSensor'
+import SmartDoorSensor from '@/components/DeviceComponents/Device/SmartDoorSensor/SmartDoorSensor'
+import SmartSwitch from '@/components/DeviceComponents/Device/SmartSwitch/SmartSwitch'
+import SmartSirenAlarm from '@/components/DeviceComponents/Device/SmartSirenAlarm/SmartSirenAlarm'
+import SmartLed from '@/components/DeviceComponents/Device/SmartLed/SmartLed'
+import SmartIR from '@/components/DeviceComponents/Device/SmartIR/SmartIR'
+import ZbHub from '@/components/DeviceComponents/Device/zbHub/zbHub'
 
 function useFinalDevice(device, refreshDevices) {
   const [finalDevice, setFinalDevice] = useState(<></>)

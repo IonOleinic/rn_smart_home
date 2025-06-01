@@ -126,7 +126,7 @@ const createStyleSheet = (theme) => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 20,
+      gap: 10,
       marginRight: 8,
       padding: 3,
     },

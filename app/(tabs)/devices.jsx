@@ -4,7 +4,7 @@ import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import useTheme from '@/hooks/useTheme'
 import { useFocusEffect, useRouter } from 'expo-router'
 import Animated, { LinearTransition } from 'react-native-reanimated'
-import Device from '@/components/DeviceComponents/Device'
+import Device from '@/components/DeviceComponents/Device/Device'
 import TabBarSafeAreaWrapper from '@/components/TabBar/TabBarSafeAreaWrapper'
 import LoadingScreen from '@/components/Layers/LoadingScreen'
 import DeletedDevices from '@/components/DeviceComponents/DeletedDevices/DeletedDevices'
@@ -15,9 +15,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import Octicons from '@expo/vector-icons/Octicons'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { Dropdown, MultiSelect } from 'react-native-element-dropdown'
-import useDebounce from '@/hooks/useDebounce'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
 
 const Devices = () => {
   const router = useRouter()
@@ -307,7 +305,7 @@ const Devices = () => {
                 <MultiSelect
                   style={[
                     styles.dropdown,
-                    { width: 150 },
+                    { width: 200 },
                     groupsFocus && { borderColor: theme.active },
                   ]}
                   placeholderStyle={{ color: theme.placeholderText }}

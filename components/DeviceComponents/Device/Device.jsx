@@ -7,26 +7,24 @@ import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { socket } from '@/api/io'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import useFinalDevice from '@/hooks/useFinalDevice'
-import InactiveLayer from '../Layers/InactiveLayer'
-import wifiLogo from './ConnectionTypeImages/wifi-logo.png'
-import zigbeeLogo from './ConnectionTypeImages/zigbee-logo.png'
+import InactiveLayer from '@/components/Layers/InactiveLayer'
+import wifiLogo from '../ConnectionTypeImages/wifi-logo.png'
+import zigbeeLogo from '../ConnectionTypeImages/zigbee-logo.png'
 import { Menu, TouchableRipple, Surface, Text } from 'react-native-paper'
 import useConfirmDialog from '@/hooks/useConfirmDialog'
 
 const Device = ({ handleDeleteDevice, initDevice, refreshDevices }) => {
+  const { theme } = useTheme()
+  const styles = createStyleSheet(theme)
   const { confirmDialog } = useConfirmDialog()
   const axios = useAxiosPrivate()
-  const { theme } = useTheme()
-  const [visibility, setVisibility] = useState(false)
+  const [expanded, setExpanded] = useState(false)
   const [device, setDevice] = useState(initDevice)
-  const styles = createStyleSheet(theme)
   const { getDeviceIcon, batteryIcon, availableIcon, favBool, favIcon } =
     useDeviceIcon(device)
   const finalDevice = useFinalDevice(device, refreshDevices)
 
   const [menuVisible, setMenuVisible] = useState(false)
-  const openMenu = () => setMenuVisible(true)
-  const closeMenu = () => setMenuVisible(false)
 
   const updateDevice = async () => {
     try {
@@ -76,19 +74,19 @@ const Device = ({ handleDeleteDevice, initDevice, refreshDevices }) => {
     >
       <View style={styles.deviceTop}>
         <Pressable
-          style={visibility ? { transform: [{ rotate: '180deg' }] } : {}}
-          onPress={() => setVisibility((prev) => !prev)}
+          style={expanded ? { transform: [{ rotate: '180deg' }] } : {}}
+          onPress={() => setExpanded((prev) => !prev)}
         >
           <MaterialIcons name='expand-more' size={30} color={theme.text} />
         </Pressable>
         <Pressable
-          onPress={() => setVisibility((prev) => !prev)}
+          onPress={() => setExpanded((prev) => !prev)}
           style={styles.deviceIcon}
         >
           {getDeviceIcon({ size: 75 })}
         </Pressable>
         <Pressable
-          onPress={() => setVisibility((prev) => !prev)}
+          onPress={() => setExpanded((prev) => !prev)}
           style={styles.deviceInfo}
         >
           <Text
@@ -142,11 +140,11 @@ const Device = ({ handleDeleteDevice, initDevice, refreshDevices }) => {
             },
           ]}
           rippleColor={theme.ripple}
-          onPress={openMenu}
+          onPress={() => setMenuVisible(true)}
         >
           <Menu
             visible={menuVisible}
-            onDismiss={closeMenu}
+            onDismiss={() => setMenuVisible(false)}
             anchor={
               <MaterialIcons name='more-vert' size={28} color={theme.text} />
             }
@@ -154,16 +152,12 @@ const Device = ({ handleDeleteDevice, initDevice, refreshDevices }) => {
           >
             <Menu.Item
               leadingIcon='information-outline'
-              onPress={() => {
-                closeMenu()
-              }}
+              onPress={() => setMenuVisible(false)}
               title='Info'
             />
             <Menu.Item
               leadingIcon='pencil-outline'
-              onPress={() => {
-                closeMenu()
-              }}
+              onPress={() => setMenuVisible(false)}
               title='Edit'
             />
 
@@ -179,15 +173,13 @@ const Device = ({ handleDeleteDevice, initDevice, refreshDevices }) => {
                   },
                   acceptIsDanger: true,
                 })
-                closeMenu()
+                setMenuVisible(false)
               }}
               title='Delete'
             />
             <Menu.Item
               leadingIcon='cancel'
-              onPress={() => {
-                closeMenu()
-              }}
+              onPress={() => setMenuVisible(false)}
               title='Cancel'
             />
           </Menu>
@@ -226,7 +218,7 @@ const Device = ({ handleDeleteDevice, initDevice, refreshDevices }) => {
       </View>
       <View
         style={
-          visibility
+          expanded
             ? styles.finalDevice
             : [styles.finalDevice, styles.finalDeviceHidden]
         }

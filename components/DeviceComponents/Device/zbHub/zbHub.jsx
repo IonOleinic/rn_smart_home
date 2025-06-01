@@ -169,7 +169,7 @@ function ZbDevicePreview({ zbDevice, handleDeleteZbDevice }) {
   }, [zbDevice])
 
   const toMinutes = (seconds) => {
-    if (!seconds) return '00 m'
+    if (!seconds) return ' - - '
     const minutes = Math.floor(seconds / 60)
     if (minutes <= 60) {
       return minutes.toString().padStart(2, '0') + ' m'
@@ -188,9 +188,9 @@ function ZbDevicePreview({ zbDevice, handleDeleteZbDevice }) {
   return (
     <View style={styles.zbDevicePreview}>
       <View style={styles.zbDeviceInfo}>
-        <Text style={styles.zbDeviceInfoText}>{`(${zbDevice.Device}) ${
-          zbDevice?.Name || 'unknown'
-        }`}</Text>
+        <Text style={styles.zbDeviceInfoText} selectable={true}>{`(${
+          zbDevice.Device
+        }) ${zbDevice?.Name || 'unknown'}`}</Text>
       </View>
       <View style={styles.zbDeviceSection}>{batteryIcon}</View>
       <View style={styles.zbDeviceSection}>{signalIcon}</View>
@@ -287,11 +287,11 @@ const createStyleSheet = (theme) => {
     zbDevicesPreview: {
       width: '100%',
       minHeight: 100,
-      gap: 10,
+      gap: 2,
     },
     zbDevicePreview: {
       width: '100%',
-      height: 30,
+      height: 45,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
