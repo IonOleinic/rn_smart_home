@@ -7,22 +7,21 @@ import DoorSecondModuleImage from './DoorSensorImages/DoorSecondModuleImage'
 import Octicons from '@expo/vector-icons/Octicons'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 
-let lockedImg = <Feather name='lock' size={25} color='#46B60A' />
-let unlockedImg = <Feather name='unlock' size={25} color='red' />
-
 function SmartDoorSensor({ device }) {
   const { theme } = useTheme()
   const axios = useAxiosPrivate()
   const [status, setStatus] = useState('Closed')
-  const [lockImg, setLockImg] = useState(lockedImg)
+  const [lockImg, setLockImg] = useState(<></>)
   const styles = createStyleSheet(theme)
 
   useEffect(() => {
     setStatus(device.attributes.status)
-    if (device.attributes.status == 'Closed') {
-      setLockImg(lockedImg)
+    if (device.attributes.status === 'ON') {
+      setStatus('Opened')
+      setLockImg(<Feather name='unlock' size={25} color={theme.danger} />)
     } else {
-      setLockImg(unlockedImg)
+      setStatus('Closed')
+      setLockImg(<Feather name='lock' size={25} color={theme.safe} />)
     }
   }, [device])
 
@@ -41,7 +40,7 @@ function SmartDoorSensor({ device }) {
         <Text
           style={[
             styles.doorStatusText,
-            { color: status == 'Closed' ? '#46B60A' : 'red' },
+            { color: status === 'Opened' ? theme.danger : theme.safe },
           ]}
         >
           {status}
@@ -50,7 +49,7 @@ function SmartDoorSensor({ device }) {
       <View
         style={[
           styles.doorImageContainer,
-          { gap: status == 'Closed' ? 0 : 50 },
+          { gap: status == 'Opened' ? 50 : 0 },
         ]}
       >
         <DoorMainModuleImage color={theme.text} width={72} height={130} />
@@ -59,7 +58,13 @@ function SmartDoorSensor({ device }) {
       <Pressable
         style={[
           styles.doorSwitchDirectionBtn,
-          { display: device.manufacter == 'tasmota' ? 'flex' : 'none' },
+          {
+            display:
+              device.connection_type === 'wifi' &&
+              device.manufacter === 'tasmota'
+                ? 'flex'
+                : 'none',
+          },
         ]}
         onPress={sendToggleDirection}
       >
