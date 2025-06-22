@@ -6,13 +6,16 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import useAxiosPrivate from '@/hooks/useAxiosPrivate'
 import useTheme from '@/hooks/useTheme'
 import useConfirmDialog from '@/hooks/useConfirmDialog'
-import { TouchableRipple } from 'react-native-paper'
+import NoDataFound from '@/components/NoDataFound/NoDataFound'
+import { Button, Dialog, Portal, TouchableRipple } from 'react-native-paper'
 
 function ZbHub({ device, refreshDevices }) {
   const { theme } = useTheme()
   const styles = createStyleSheet(theme)
   const axios = useAxiosPrivate()
   const [connectedDevices, setConnectedDevices] = useState([])
+  const [zbDevicesvisibility, setZbDevicesVisibility] = useState(false)
+  const { confirmDialog } = useConfirmDialog()
 
   useEffect(() => {
     setConnectedDevices(device.attributes?.connected_devices || [])
@@ -27,7 +30,19 @@ function ZbHub({ device, refreshDevices }) {
       console.error('Error changing pairing mode:', error)
     }
   }
-  const handleDeleteZbDevice = async (zbDevice) => {
+  const handleDeleteZbDevice = (zbDevice) => {
+    setZbDevicesVisibility(false)
+    confirmDialog({
+      header: 'Destroy confirmation',
+      message: `Do you want to destroy and unpair zigbee device (${zbDevice.Device})?`,
+      icon: 'trash-can-outline',
+      onAccept: () => {
+        destroyZbDevice(zbDevice)
+      },
+      acceptIsDanger: true,
+    })
+  }
+  const destroyZbDevice = async (zbDevice) => {
     try {
       const response = await axios.delete(
         `/zbHub/device?hub_id=${device.id}&short_addr=${zbDevice.Device}`
@@ -87,26 +102,60 @@ function ZbHub({ device, refreshDevices }) {
         </View>
       </View>
       <View style={styles.zbDevicesContainer}>
-        <View style={styles.zbDevicesTitle}>
+        <TouchableRipple
+          rippleColor={theme.ripple}
+          borderless={true}
+          style={styles.zbDevicesButton}
+          onPress={() => setZbDevicesVisibility(true)}
+        >
           <Text style={styles.title}>
             {connectedDevices.length} connected devices
           </Text>
-        </View>
-        <ScrollView
-          contentContainerStyle={styles.zbDevicesPreview}
-          scrollEnabled={true}
-          style={{ minHeight: 100, maxHeight: 150 }}
-        >
-          {connectedDevices
-            ?.sort((a, b) => b.Device - a.Device)
-            .map((zbDevice) => (
-              <ZbDevicePreview
-                key={zbDevice.Device}
-                zbDevice={zbDevice}
-                handleDeleteZbDevice={handleDeleteZbDevice}
-              />
-            ))}
-        </ScrollView>
+        </TouchableRipple>
+        <Portal>
+          <Dialog
+            onDismiss={() => setZbDevicesVisibility(false)}
+            visible={zbDevicesvisibility}
+            style={{ borderRadius: 12 }}
+          >
+            <Dialog.Title>
+              <Text>Connected zigbee devices</Text>
+            </Dialog.Title>
+            <Dialog.Content>
+              <View style={styles.zbDevicesContent}>
+                {connectedDevices.length > 0 ? (
+                  <ScrollView
+                    contentContainerStyle={styles.zbDevicesPreview}
+                    style={{ minHeight: 200, maxHeight: 300 }}
+                  >
+                    {connectedDevices
+                      ?.sort((a, b) => b.Device - a.Device)
+                      .map((zbDevice) => (
+                        <ZbDevicePreview
+                          key={zbDevice.Device}
+                          zbDevice={zbDevice}
+                          handleDeleteZbDevice={handleDeleteZbDevice}
+                        />
+                      ))}
+                  </ScrollView>
+                ) : (
+                  <NoDataFound />
+                )}
+                <Button
+                  mode='contained'
+                  labelStyle={{ color: 'white' }}
+                  buttonColor={theme.active}
+                  style={styles.button}
+                  onPress={() => {
+                    setZbDevicesVisibility(false)
+                  }}
+                >
+                  Ok
+                </Button>
+              </View>
+            </Dialog.Content>
+          </Dialog>
+        </Portal>
       </View>
     </View>
   )
@@ -117,7 +166,6 @@ function ZbDevicePreview({ zbDevice, handleDeleteZbDevice }) {
   const styles = createStyleSheet(theme)
   const [batteryIcon, setBatteryIcon] = useState(<></>)
   const [signalIcon, setSignalIcon] = useState(<></>)
-  const { confirmDialog } = useConfirmDialog()
 
   useEffect(() => {
     if (zbDevice.BatteryPercentage !== undefined) {
@@ -211,15 +259,7 @@ function ZbDevicePreview({ zbDevice, handleDeleteZbDevice }) {
       <Pressable
         style={styles.zbDeviceDelete}
         onPress={() => {
-          confirmDialog({
-            header: 'Destroy confirmation',
-            message: `Do you want to destroy and unpair zigbee device (${zbDevice.Device})?`,
-            icon: 'trash-can-outline',
-            onAccept: () => {
-              handleDeleteZbDevice(zbDevice)
-            },
-            acceptIsDanger: true,
-          })
+          handleDeleteZbDevice(zbDevice)
         }}
       >
         <MaterialCommunityIcons
@@ -234,6 +274,11 @@ function ZbDevicePreview({ zbDevice, handleDeleteZbDevice }) {
 
 const createStyleSheet = (theme) => {
   return StyleSheet.create({
+    button: {
+      width: 100,
+      borderRadius: 10,
+      marginTop: 20,
+    },
     text: { color: theme.text },
     title: { fontSize: 18, fontWeight: 'bold', color: theme.text },
     zbHub: {
@@ -241,7 +286,7 @@ const createStyleSheet = (theme) => {
       width: '100%',
       height: '100%',
       alignItems: 'center',
-      justifyContent: 'flex-start',
+      justifyContent: 'center',
     },
     zbPairContainer: {
       width: '100%',
@@ -282,20 +327,29 @@ const createStyleSheet = (theme) => {
     },
     zbDevicesContainer: {
       width: '100%',
-      height: 170,
+      height: 100,
       alignItems: 'center',
       justifyContent: 'center',
     },
-    zbDevicesTitle: {
-      width: '100%',
-      height: 25,
+    zbDevicesButton: {
+      width: 250,
+      height: 35,
       alignItems: 'center',
       justifyContent: 'center',
+      borderWidth: 1,
+      borderRadius: 6,
+      borderColor: theme.text,
+    },
+    zbDevicesContent: {
+      width: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 5,
+      minHeight: 300,
     },
     zbDevicesPreview: {
       width: '100%',
-      minHeight: 100,
-      gap: 2,
+      gap: 5,
     },
     zbDevicePreview: {
       width: '100%',
@@ -305,11 +359,11 @@ const createStyleSheet = (theme) => {
       justifyContent: 'space-between',
     },
     zbDeviceInfo: {
-      width: 190,
+      width: 170,
       alignItems: 'center',
     },
     zbDeviceInfoText: {
-      width: 190,
+      width: 170,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',

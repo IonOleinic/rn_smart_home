@@ -19,7 +19,11 @@ function SmartTempSensor({ device }) {
       <View style={styles.tempItems}>
         <View style={styles.tempItem}>
           <View style={styles.tempItemIcon}>
-            <FontAwesome6 name='temperature-half' size={50} color='red' />
+            <FontAwesome6
+              name='temperature-half'
+              size={50}
+              color={theme.danger}
+            />
           </View>
           <Text style={[styles.tempItemText]}>{temperature} </Text>
           <MaterialCommunityIcons

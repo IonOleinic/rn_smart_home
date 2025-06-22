@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react'
-import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
-import { HiOutlineArrowRight } from 'react-icons/hi'
-import { FaTemperatureLow } from 'react-icons/fa'
-import { ImLocation } from 'react-icons/im'
-import { TbTemperatureCelsius } from 'react-icons/tb'
-import { GrAction } from 'react-icons/gr'
-import useDeviceIcon from '../../../../hooks/useDeviceIcon'
-import './WeatherScene.css'
+import { Image, StyleSheet, Text, View } from 'react-native'
+import AntDesign from '@expo/vector-icons/AntDesign'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import useDeviceIcon from '@/hooks/useDeviceIcon'
+import useAxiosPrivate from '@/hooks/useAxiosPrivate'
+import useTheme from '@/hooks/useTheme'
+import zigbeeLogo from '@/components/DeviceComponents/ConnectionTypeImages/zigbee-logo.png'
+import wifiLogo from '@/components/DeviceComponents/ConnectionTypeImages/wifi-logo.png'
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 
 function WeatherScene({ scene }) {
+  const { theme } = useTheme()
+  const styles = createStyleSheet(theme)
   const axios = useAxiosPrivate()
   const [execDevice, setExecDevice] = useState({})
   const execDeviceIcons = useDeviceIcon(execDevice)
@@ -25,70 +29,174 @@ function WeatherScene({ scene }) {
   }, [scene])
 
   return (
-    <div className='weather-scene'>
-      <div className='weather-scene-top'>
-        <div className='weather-scene-item'>
-          <div className='weather-scene-location'>
-            <div>
-              <ImLocation size={22} color='blue' />
-            </div>
-            <p>
-              {scene?.city}
-              {', '}
-              {scene?.country}
-            </p>
-          </div>
-          <div className='weather-scene-temperature'>
-            <FaTemperatureLow size={38} color='red' />
-            <p>
-              {scene.comparison_sign + ' '} {scene.target_temperature}{' '}
-              <TbTemperatureCelsius
-                size={30}
-                color='black'
-                className='celsius-icon'
-              />
-            </p>
-          </div>
-        </div>
-        <div className='arrow-right'>
-          <HiOutlineArrowRight size={30} color={'black'} />
-        </div>
-        <div className='weather-scene-item'>
-          <div className='weather-scene-name-img'>
-            <p>{execDevice.name}</p>
-            {execDeviceIcons.deviceIcon}
-          </div>
-          <div className='weather-scene-text'>
-            <GrAction size={20} />
+    <View style={styles.weatherScene}>
+      <View style={styles.weatherSceneTop}>
+        <View style={styles.weatherSceneItem}>
+          <View style={styles.weatherSceneLocation}>
+            <MaterialIcons name='location-pin' size={22} color='blue' />
+            <Text style={styles.weatherSceneLocationText}>
+              {`${scene?.city}, ${scene?.country}`}
+            </Text>
+          </View>
+          <View style={styles.weatherSceneTemperature}>
+            <FontAwesome6
+              name='temperature-half'
+              size={35}
+              color={theme.danger}
+            />
+            <Text style={styles.weatherSceneTemperatureText}>
+              {`${scene.comparison_sign} ${scene.target_temperature}`}
+            </Text>
+            <MaterialCommunityIcons
+              name='temperature-celsius'
+              size={30}
+              color={theme.text}
+            />
+          </View>
+        </View>
+        <View>
+          <AntDesign name='arrowright' size={30} color={theme.text} />
+        </View>
+        <View style={styles.weatherSceneItem}>
+          <View style={styles.weatherSceneData}>
+            <Text style={styles.weatherSceneDeviceName}>{execDevice.name}</Text>
+            {execDeviceIcons.getDeviceIcon({ color: theme.text, size: 70 })}
+            <View style={styles.weatherSceneConnectionType}>
+              {execDevice.connection_type && (
+                <Image
+                  source={
+                    execDevice.connection_type === 'zigbee'
+                      ? zigbeeLogo
+                      : wifiLogo
+                  }
+                  style={{
+                    width: execDevice.connection_type === 'wifi' ? 30 : 20,
+                    height: 20,
+                  }}
+                />
+              )}
+            </View>
+          </View>
+          <View style={styles.weatherSceneEvent}>
+            <MaterialCommunityIcons
+              name='connection'
+              size={20}
+              color={theme.text}
+            />
             {scene.executable_text.includes('Color') ? (
-              <div
+              <View
                 style={{
                   display: 'flex',
+                  flexDirection: 'row',
                   alignItems: 'center',
+                  gap: 5,
                 }}
               >
-                <p style={{ margin: '0 0.3rem' }}>{'Color'}</p>
-                <div
+                <Text style={styles.text}>{'Color'}</Text>
+                <View
                   style={{
-                    width: '25px',
-                    height: '25px',
-                    borderRadius: '5px',
-                    border:
-                      scene.executable_text.split(' ')[1] == 'ffffff'
-                        ? '1px solid black'
-                        : 'none',
+                    width: 25,
+                    height: 25,
+                    borderRadius: 5,
+                    borderWidth:
+                      scene.executable_text.split(' ')[1] == 'ffffff' ? 1 : 0,
+                    borderColor: theme.text,
                     backgroundColor: `#${scene.executable_text.split(' ')[1]}`,
                   }}
-                ></div>
-              </div>
+                ></View>
+              </View>
             ) : (
-              <p>{scene.executable_text}</p>
+              <Text style={styles.text}>{scene.executable_text}</Text>
             )}
-          </div>
-        </div>
-      </div>
-    </div>
+          </View>
+        </View>
+      </View>
+    </View>
   )
 }
-
+const createStyleSheet = (theme) => {
+  return StyleSheet.create({
+    text: {
+      color: theme.text,
+      fontSize: 16,
+      fontWeight: 600,
+    },
+    weatherScene: {
+      position: 'relative',
+      width: '100%',
+      paddingVertical: 10,
+      height: 170,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    weatherSceneTop: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    weatherSceneItem: {
+      width: 140,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    weatherSceneData: {
+      width: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
+      height: 100,
+    },
+    weatherSceneDeviceName: {
+      width: 140,
+      fontSize: 16,
+      fontWeight: 600,
+      color: theme.text,
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textAlign: 'center',
+    },
+    weatherSceneConnectionType: {
+      position: 'absolute',
+      bottom: 0,
+      right: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    weatherSceneEvent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 3,
+      padding: 3,
+      height: 30,
+      marginTop: 8,
+      borderWidth: 1,
+      borderColor: theme.text,
+      borderRadius: 4,
+    },
+    weatherSceneLocation: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 16,
+    },
+    weatherSceneLocationText: {
+      color: theme.text,
+      fontSize: 18,
+      textTransform: 'capitalize',
+    },
+    weatherSceneTemperature: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    weatherSceneTemperatureText: {
+      color: theme.text,
+      fontSize: 25,
+      marginLeft: 5,
+    },
+  })
+}
 export default WeatherScene

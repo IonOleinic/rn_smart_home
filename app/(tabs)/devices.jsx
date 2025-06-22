@@ -132,7 +132,7 @@ const Devices = () => {
       console.log(error.message)
     }
   }
-  const resetFIlter = () => {
+  const resetFilter = () => {
     setFilter({ ...filter, name: '', groups: [], favorite: undefined })
     setTempName('')
     getDevices(
@@ -248,7 +248,7 @@ const Devices = () => {
               />
             </View>
           </View>
-          <View style={[styles.toolbarSection, styles.deviceFiltersSection]}>
+          <View style={[styles.toolbarSection, styles.filtersSection]}>
             <View style={styles.toolbarItem}>
               <Button
                 mode='outlined'
@@ -256,7 +256,7 @@ const Devices = () => {
                 labelStyle={{ color: theme.active }}
                 style={{ borderColor: theme.active }}
                 onPress={() => {
-                  resetFIlter()
+                  resetFilter()
                   setToolbarExpanded(false)
                 }}
               >
@@ -430,6 +430,14 @@ const Devices = () => {
               />
             </View>
           </View>
+          <View style={[styles.toolbarSection, styles.resultSection]}>
+            <View style={[styles.toolbarItem, styles.toolbarItemResult]}>
+              <Text style={styles.toolbarItemResultText}>
+                Finded : {devices.length}{' '}
+                {devices.length === 1 ? 'result' : 'results'}
+              </Text>
+            </View>
+          </View>
           <View style={[styles.toolbarSection, styles.applyFiltersSection]}>
             <View style={[styles.toolbarItem, styles.toolbarItemRefresh]}>
               <Button
@@ -445,15 +453,17 @@ const Devices = () => {
                 Refresh
               </Button>
             </View>
-            <View style={[styles.toolbarItem, styles.toolbarItemApply]}>
+            <View style={styles.toolbarItem}>
               <Button
                 mode='contained'
                 labelStyle={{ color: 'white' }}
                 buttonColor={theme.active}
                 icon='check'
                 onPress={() => {
-                  setFilter({ ...filter, name: tempName })
-                  getDevices({ ...filter, name: tempName })
+                  if (tempName !== '') {
+                    setFilter({ ...filter, name: tempName })
+                    getDevices({ ...filter, name: tempName })
+                  }
                   setToolbarExpanded(false)
                 }}
               >
@@ -540,13 +550,21 @@ const createStyleSheet = (theme) => {
       justifyContent: 'center',
       gap: 16,
     },
-    deviceFiltersSection: {
+    filtersSection: {
       paddingHorizontal: 30,
       flexDirection: 'column',
       alignItems: 'flex-start',
       justifyContent: 'flex-start',
       height: 500,
       gap: 50,
+    },
+    resultSection: {
+      paddingHorizontal: 30,
+      justifyContent: 'flex-start',
+    },
+    toolbarItemResultText: {
+      color: theme.text,
+      fontSize: 18,
     },
     applyFiltersSection: {
       justifySelf: 'flex-end',
@@ -646,6 +664,7 @@ const createStyleSheet = (theme) => {
       color: theme.text,
       fontSize: 16,
     },
+
     devices: {
       width: '100%',
       justifyContent: 'center',

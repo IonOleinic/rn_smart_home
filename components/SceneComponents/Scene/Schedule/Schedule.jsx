@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react'
-import useAxiosPrivate from '../../../../hooks/useAxiosPrivate'
-import { HiOutlineArrowRight } from 'react-icons/hi'
-import { TbRepeatOnce } from 'react-icons/tb'
-import { BsClock } from 'react-icons/bs'
-import { GrAction } from 'react-icons/gr'
-import useDeviceIcon from '../../../../hooks/useDeviceIcon'
-import './Schedule.css'
+import { Image, StyleSheet, Text, View } from 'react-native'
+import AntDesign from '@expo/vector-icons/AntDesign'
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import useDeviceIcon from '@/hooks/useDeviceIcon'
+import useAxiosPrivate from '@/hooks/useAxiosPrivate'
+import useTheme from '@/hooks/useTheme'
+import zigbeeLogo from '@/components/DeviceComponents/ConnectionTypeImages/zigbee-logo.png'
+import wifiLogo from '@/components/DeviceComponents/ConnectionTypeImages/wifi-logo.png'
 
 function Schedule({ scene }) {
+  const { theme } = useTheme()
+  const styles = createStyleSheet(theme)
   const axios = useAxiosPrivate()
   const [execDevice, setExecDevice] = useState({})
   const execDeviceIcons = useDeviceIcon(execDevice)
@@ -30,132 +34,294 @@ function Schedule({ scene }) {
     }
   }
   return (
-    <div className='schedule'>
-      <div className='schedule-top'>
-        <div className='schedule-scene-item'>
-          <div className='schedule-scene-name-img'>
-            <p>{execDevice.name}</p>
-            {execDeviceIcons.deviceIcon}
-          </div>
-        </div>
-        <div className='arrow-right'>
-          <HiOutlineArrowRight size={30} color={'black'} />
-        </div>
-        <div className='schedule-scene-item'>
-          <div className='schedule-text'>
-            <GrAction size={20} />
+    <View style={styles.scheduleScene}>
+      <View style={styles.scheduleSceneTop}>
+        <View style={styles.scheduleSceneItem}>
+          <View style={styles.scheduleSceneData}>
+            <Text style={styles.scheduleSceneDeviceName}>
+              {execDevice.name}
+            </Text>
+            {execDeviceIcons.getDeviceIcon({ color: theme.text, size: 70 })}
+          </View>
+        </View>
+        <View>
+          <AntDesign name='arrowright' size={30} color={theme.text} />
+        </View>
+        <View style={styles.scheduleSceneItem}>
+          <View style={styles.scheduleSceneEvent}>
+            <MaterialCommunityIcons
+              name='connection'
+              size={20}
+              color={theme.text}
+            />
             {scene.executable_text.includes('Color') ? (
-              <div
+              <View
                 style={{
                   display: 'flex',
+                  flexDirection: 'row',
                   alignItems: 'center',
+                  gap: 5,
                 }}
               >
-                <p style={{ margin: '0 0.3rem' }}>{'Color'}</p>
-                <div
+                <Text style={styles.text}>{'Color'}</Text>
+                <View
                   style={{
-                    width: '25px',
-                    height: '25px',
-                    borderRadius: '5px',
-                    border:
-                      scene.executable_text.split(' ')[1] == 'ffffff'
-                        ? '1px solid black'
-                        : 'none',
+                    width: 25,
+                    height: 25,
+                    borderRadius: 5,
+                    borderWidth:
+                      scene.executable_text.split(' ')[1] == 'ffffff' ? 1 : 0,
+                    borderColor: theme.text,
                     backgroundColor: `#${scene.executable_text.split(' ')[1]}`,
                   }}
-                ></div>
-              </div>
+                ></View>
+              </View>
             ) : (
-              <p>{scene.executable_text}</p>
+              <Text style={styles.text}>{scene.executable_text}</Text>
             )}
-          </div>
-        </div>
-      </div>
-      <div className='schedule-time'>
-        <div className='schedule-time-group'>
-          <span className='schedule-clock-icon'>
-            <BsClock size={18} color={'black'} />
-          </span>
-          <p>{scene.hour}</p>
-          <p>:</p>
-          <p>{addZero(Number(scene.minute))}</p>
-          <span
-            className='schedule-repeat-once-icon'
+          </View>
+        </View>
+      </View>
+      <View style={styles.scheduleTime}>
+        <View style={styles.scheduleTimeGroup}>
+          <MaterialCommunityIcons
+            name='clock-outline'
+            size={20}
+            color={theme.text}
+          />
+          <Text style={styles.scheduleTimeGroupText}>{`${scene.hour}:${addZero(
+            Number(scene.minute)
+          )}`}</Text>
+          <MaterialCommunityIcons
+            name='repeat-once'
+            size={20}
+            color={theme.danger}
             style={{
               display: scene.dayOfWeek == '' ? 'flex' : 'none',
             }}
-          >
-            <TbRepeatOnce size={18} color={'red'} />
-          </span>
-        </div>
-      </div>
-      <div className='schedule-repeat'>
-        <p
-          style={{
-            color: scene.dayOfWeek.includes(1) ? 'white' : '#ccc',
-            borderColor: scene.dayOfWeek.includes(1) ? 'black' : '#ccc',
-            backgroundColor: scene.dayOfWeek.includes(1) ? '#30b301' : 'white',
-          }}
+          />
+        </View>
+      </View>
+      <View style={styles.scheduleRepeat}>
+        <Text
+          style={[
+            styles.scheduleRepeatText,
+            {
+              color: scene.dayOfWeek.includes(1) ? 'white' : theme.inactive,
+              borderColor: scene.dayOfWeek.includes(1)
+                ? theme.text
+                : theme.inactive,
+              backgroundColor: scene.dayOfWeek.includes(1)
+                ? '#30b301'
+                : 'transparent',
+            },
+          ]}
         >
           Mon
-        </p>
-        <p
-          style={{
-            color: scene.dayOfWeek.includes(2) ? 'white' : '#ccc',
-            borderColor: scene.dayOfWeek.includes(2) ? 'black' : '#ccc',
-            backgroundColor: scene.dayOfWeek.includes(2) ? '#30b301' : 'white',
-          }}
+        </Text>
+        <Text
+          style={[
+            styles.scheduleRepeatText,
+            {
+              color: scene.dayOfWeek.includes(2) ? 'white' : theme.inactive,
+              borderColor: scene.dayOfWeek.includes(2)
+                ? theme.text
+                : theme.inactive,
+              backgroundColor: scene.dayOfWeek.includes(2)
+                ? '#30b301'
+                : 'transparent',
+            },
+          ]}
         >
           Tue
-        </p>
-        <p
-          style={{
-            color: scene.dayOfWeek.includes(3) ? 'white' : '#ccc',
-            borderColor: scene.dayOfWeek.includes(3) ? 'black' : '#ccc',
-            backgroundColor: scene.dayOfWeek.includes(3) ? '#30b301' : 'white',
-          }}
+        </Text>
+        <Text
+          style={[
+            styles.scheduleRepeatText,
+            {
+              color: scene.dayOfWeek.includes(3) ? 'white' : theme.inactive,
+              borderColor: scene.dayOfWeek.includes(3)
+                ? theme.text
+                : theme.inactive,
+              backgroundColor: scene.dayOfWeek.includes(3)
+                ? '#30b301'
+                : 'transparent',
+            },
+          ]}
         >
           Wed
-        </p>
-        <p
-          style={{
-            color: scene.dayOfWeek.includes(4) ? 'white' : '#ccc',
-            borderColor: scene.dayOfWeek.includes(4) ? 'black' : '#ccc',
-            backgroundColor: scene.dayOfWeek.includes(4) ? '#30b301' : 'white',
-          }}
+        </Text>
+        <Text
+          style={[
+            styles.scheduleRepeatText,
+            {
+              color: scene.dayOfWeek.includes(4) ? 'white' : theme.inactive,
+              borderColor: scene.dayOfWeek.includes(4)
+                ? theme.text
+                : theme.inactive,
+              backgroundColor: scene.dayOfWeek.includes(4)
+                ? '#30b301'
+                : 'transparent',
+            },
+          ]}
         >
           Thru
-        </p>
-        <p
-          style={{
-            color: scene.dayOfWeek.includes(5) ? 'white' : '#ccc',
-            borderColor: scene.dayOfWeek.includes(5) ? 'black' : '#ccc',
-            backgroundColor: scene.dayOfWeek.includes(5) ? '#30b301' : 'white',
-          }}
+        </Text>
+        <Text
+          style={[
+            styles.scheduleRepeatText,
+            {
+              color: scene.dayOfWeek.includes(5) ? 'white' : theme.inactive,
+              borderColor: scene.dayOfWeek.includes(5)
+                ? theme.text
+                : theme.inactive,
+              backgroundColor: scene.dayOfWeek.includes(5)
+                ? '#30b301'
+                : 'transparent',
+            },
+          ]}
         >
           Fri
-        </p>
-        <p
-          style={{
-            color: scene.dayOfWeek.includes(6) ? 'white' : '#ccc',
-            borderColor: scene.dayOfWeek.includes(6) ? 'black' : '#ccc',
-            backgroundColor: scene.dayOfWeek.includes(6) ? '#30b301' : 'white',
-          }}
+        </Text>
+        <Text
+          style={[
+            styles.scheduleRepeatText,
+            {
+              color: scene.dayOfWeek.includes(6) ? 'white' : theme.inactive,
+              borderColor: scene.dayOfWeek.includes(6)
+                ? theme.text
+                : theme.inactive,
+              backgroundColor: scene.dayOfWeek.includes(6)
+                ? '#30b301'
+                : 'transparent',
+            },
+          ]}
         >
           Sat
-        </p>
-        <p
-          style={{
-            color: scene.dayOfWeek.includes(0) ? 'white' : '#ccc',
-            borderColor: scene.dayOfWeek.includes(0) ? 'black' : '#ccc',
-            backgroundColor: scene.dayOfWeek.includes(0) ? '#30b301' : 'white',
-          }}
+        </Text>
+        <Text
+          style={[
+            styles.scheduleRepeatText,
+            {
+              color: scene.dayOfWeek.includes(7) ? 'white' : theme.inactive,
+              borderColor: scene.dayOfWeek.includes(7)
+                ? theme.text
+                : theme.inactive,
+              backgroundColor: scene.dayOfWeek.includes(7)
+                ? '#30b301'
+                : 'transparent',
+            },
+          ]}
         >
           Sun
-        </p>
-      </div>
-    </div>
+        </Text>
+      </View>
+    </View>
   )
+}
+
+const createStyleSheet = (theme) => {
+  return StyleSheet.create({
+    text: {
+      color: theme.text,
+      fontSize: 16,
+      fontWeight: 600,
+    },
+    scheduleScene: {
+      position: 'relative',
+      width: '100%',
+      height: 170,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    scheduleSceneTop: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    scheduleSceneItem: {
+      width: 140,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    scheduleSceneData: {
+      position: 'relative',
+      width: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
+      height: 100,
+    },
+    scheduleSceneDeviceName: {
+      width: 140,
+      fontSize: 16,
+      fontWeight: 600,
+      color: theme.text,
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textAlign: 'center',
+    },
+    scheduleSceneConnectionType: {
+      position: 'absolute',
+      bottom: 0,
+      right: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    scheduleSceneEvent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 3,
+      padding: 3,
+      height: 30,
+      marginTop: 8,
+      borderWidth: 1,
+      borderColor: theme.text,
+      borderRadius: 4,
+    },
+    scheduleTime: {
+      marginBottom: 5,
+      width: '100%',
+      height: 30,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    scheduleTimeGroup: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+      gap: 3,
+    },
+    scheduleTimeGroupText: {
+      color: theme.text,
+      fontSize: 21,
+      fontWeight: 600,
+      marginBottom: 5,
+    },
+    scheduleRepeat: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    scheduleRepeatText: {
+      width: 40,
+      height: 30,
+      padding: 5,
+      color: theme.inactive,
+      fontSize: 12,
+      fontWeight: 600,
+      borderWidth: 1,
+      borderColor: theme.inactive,
+      borderRadius: 4,
+      textAlign: 'center',
+    },
+  })
 }
 
 export default Schedule

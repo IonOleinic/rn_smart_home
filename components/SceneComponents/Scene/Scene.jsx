@@ -12,6 +12,9 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import useTheme from '@/hooks/useTheme'
 import useConfirmDialog from '@/hooks/useConfirmDialog'
+import DeviceScene from './DeviceScene/DeviceScene'
+import WeatherScene from './WeatherScene/WeatherScene'
+import Schedule from './Schedule/Schedule'
 
 function Scene({ initScene, handleDeleteScene }) {
   const { colorScheme, theme } = useTheme()
@@ -76,13 +79,13 @@ function Scene({ initScene, handleDeleteScene }) {
   }
 
   let finalScene = <></>
-  // if (scene.scene_type === 'schedule') {
-  //   final_scene = <Schedule scene={scene} />
-  // } else if (scene.scene_type === 'deviceScene') {
-  //   final_scene = <DeviceScene scene={scene} />
-  // } else if (scene.scene_type === 'weather') {
-  //   final_scene = <WeatherScene scene={scene} />
-  // }
+  if (scene.scene_type === 'schedule') {
+    finalScene = <Schedule scene={scene} />
+  } else if (scene.scene_type === 'deviceScene') {
+    finalScene = <DeviceScene scene={scene} />
+  } else if (scene.scene_type === 'weather') {
+    finalScene = <WeatherScene scene={scene} />
+  }
   return (
     <Surface key={scene.id} style={[styles.scene]} elevation={2}>
       <View style={styles.sceneTop}>
@@ -259,6 +262,7 @@ const createStyleSheet = (theme) => {
     },
     finalSceneHidden: {
       maxHeight: 0,
+      overflow: 'hidden',
     },
   })
 }

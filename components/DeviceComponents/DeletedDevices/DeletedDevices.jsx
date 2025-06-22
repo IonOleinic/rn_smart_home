@@ -79,7 +79,6 @@ function DeletedDevices({ devices, refreshDevices }) {
               {deletedDevices.length > 0 ? (
                 <ScrollView
                   contentContainerStyle={styles.deletedDevices}
-                  scrollEnabled={true}
                   style={{ minHeight: 200, maxHeight: 300 }}
                 >
                   {deletedDevices.map((device) => {
