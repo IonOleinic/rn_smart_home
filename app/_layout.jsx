@@ -34,9 +34,9 @@ function StackScreens() {
         <Stack.Screen name='auth/signin' options={{ headerShown: false }} />
       </Stack.Protected>
       <Stack.Protected guard={isLoggedIn}>
-        <Stack.Screen name='device/[id]' options={{ headerShown: false }} />
+        <Stack.Screen name='devices/[id]' options={{ headerShown: false }} />
         <Stack.Screen
-          name='device/add'
+          name='devices/add'
           options={{
             title: 'Add Device',
             headerShown: true,
@@ -45,9 +45,9 @@ function StackScreens() {
             },
           }}
         />
-        <Stack.Screen name='scene/[id]' options={{ headerShown: false }} />
+        <Stack.Screen name='scenes/[id]' options={{ headerShown: false }} />
         <Stack.Screen
-          name='scene/add'
+          name='scenes/add'
           options={{
             title: 'Add Scene',
             headerShown: true,
@@ -56,9 +56,9 @@ function StackScreens() {
             },
           }}
         />
-        <Stack.Screen name='group/[id]' options={{ headerShown: false }} />
+        <Stack.Screen name='groups/[id]' options={{ headerShown: false }} />
         <Stack.Screen
-          name='group/add'
+          name='groups/add'
           options={{
             title: 'Add Group',
             headerShown: true,
@@ -66,6 +66,18 @@ function StackScreens() {
               return <CustomHeader navigation={navigation} title='Add Group' />
             },
           }}
+        />
+        <Stack.Screen
+          name='scenes/add/weather'
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='scenes/add/deviceScene'
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='scenes/add/schedule'
+          options={{ headerShown: false }}
         />
       </Stack.Protected>
     </Stack>

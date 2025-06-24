@@ -207,7 +207,7 @@ const Devices = () => {
                 borderless={true}
                 style={styles.toolbarAddBtn}
                 onPress={() => {
-                  router.push('/device/add')
+                  router.push('/devices/add')
                 }}
               >
                 <MaterialCommunityIcons name='plus' size={24} color='white' />

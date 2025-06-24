@@ -199,7 +199,7 @@ const Scenes = () => {
                 borderless={true}
                 style={styles.toolbarAddBtn}
                 onPress={() => {
-                  router.push('/scene/add')
+                  router.push('/scenes/add')
                 }}
               >
                 <MaterialCommunityIcons name='plus' size={24} color='white' />

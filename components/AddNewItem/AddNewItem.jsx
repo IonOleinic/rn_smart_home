@@ -49,13 +49,13 @@ const AddNewItem = ({ title, icon }) => {
         ]}
         onPress={() => {
           if (title === 'Device') {
-            router.push('/device/add')
+            router.push('/devices/add')
           }
           if (title === 'Scene') {
-            router.push('/scene/add')
+            router.push('/scenes/add')
           }
           if (title === 'Group') {
-            router.push('/group/add')
+            router.push('/groups/add')
           }
         }}
       >
